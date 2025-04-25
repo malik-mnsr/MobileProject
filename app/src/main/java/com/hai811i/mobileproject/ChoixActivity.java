@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.hai811i.mobileproject.fragments.SignInFragment;
 import com.hai811i.mobileproject.fragments.SignUpFragment;
 
 public class ChoixActivity extends AppCompatActivity {
@@ -44,8 +45,16 @@ public class ChoixActivity extends AppCompatActivity {
         buttonConnexion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Intent intent = new Intent(ChoixActivity.this, ConnexionActivity.class);
-              //  startActivity(intent);
+                findViewById(R.id.main_content).setVisibility(View.GONE);
+
+                // Show fragment container
+                findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+
+                // Fragment transaction
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, new SignInFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
     }
