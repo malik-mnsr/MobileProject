@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MobileProject</string>
+    <string name="ai_assistant">AI Assistant</string>
+    <string name="back_button_desc">Back</string>
+    <string name="info_button_desc">Info</string>
+    <string name="send_button_desc">Send message</string>
+    <string name="type_your_message">Type your message...</string>
 </resources>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/doctorStatusHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:weightSum="1">
+
+    <!-- Name and Status Column -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="0.7"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/doctorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dr. Smith"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_bold" />
+
+        <TextView
+            android:id="@+id/doctorStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Available"
+            android:textSize="20dp"
+            android:fontFamily="@font/poppins_light"
+            android:textColor="@color/NeonGreen" />
+    </LinearLayout>
+
+    <!-- Profile Icon with Status Bubble -->
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_weight="0.3"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="-40dp">
+
+        <ImageView
+            android:id="@+id/imageViewProfile"
+            android:layout_width="60dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginStart="45dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_default_profile"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/circle_background"/>
+
+        <!-- Status bubble -->
+        <View
+            android:id="@+id/statusBubble"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/status_bubble_background" />
+    </FrameLayout>
+
+</LinearLayout>

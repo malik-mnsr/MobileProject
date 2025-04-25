@@ -8,4 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="text">#253237</color>
+    <color name="NeonGreen">#0FFF50</color>
+    <color name="moonstone">#3AAFB9</color>
+    <color name="chefchaoune_blue">#5A9BD5</color>
+    <color name="crayola">#EF5350</color>
+    <color name="salt_blue">#A0C4FF</color>
+    <color name="transparent">#00000000</color>
+    <color name="SaltGray">#EEEEEE</color>
 </resources>

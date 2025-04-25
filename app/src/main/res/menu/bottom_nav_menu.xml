@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_accueil"
+
+        android:title="Accueil" />
+
+    <item
+        android:id="@+id/nav_fiche"
+
+        android:title="Fiche" />
+
+    <item
+        android:id="@+id/nav_ai"
+
+        android:title="AI Assistant" />
+
+    <item
+        android:id="@+id/nav_rdv"
+
+        android:title="Rendez-vous" />
+
+</menu>
