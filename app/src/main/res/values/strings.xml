@@ -5,4 +5,17 @@
     <string name="info_button_desc">Info</string>
     <string name="send_button_desc">Send message</string>
     <string name="type_your_message">Type your message...</string>
+
+<!-- … tes autres chaînes … -->
+
+<!-- Pour le Spinner -->
+<string name="select_patient">Sélectionnez un patient</string>
+
+<!-- Hints du formulaire -->
+<string name="hint_date">Date</string>
+<string name="hint_time">Heure</string>
+<string name="hint_reason">Raison</string>
+
+<!-- Titre du dialog -->
+<string name="new_appointment">Nouveau rendez-vous</string>
 </resources>

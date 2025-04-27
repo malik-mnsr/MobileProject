@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <Spinner
+            android:id="@+id/spinnerPatient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/select_patient" />
+
+        <EditText
+            android:id="@+id/etDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:drawableRight="@drawable/ic_calendar_today"
+            android:hint="@string/hint_date" />
+
+        <EditText
+            android:id="@+id/etTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:drawableRight="@drawable/ic_access_time"
+            android:hint="@string/hint_time"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/etReason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_reason"
+            android:layout_marginTop="12dp"/>
+
+    </LinearLayout>
+</ScrollView>
