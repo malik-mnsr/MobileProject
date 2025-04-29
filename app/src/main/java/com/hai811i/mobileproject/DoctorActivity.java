@@ -1,5 +1,6 @@
 package com.hai811i.mobileproject;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +16,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.fragments.AssistantFragment;
+import com.hai811i.mobileproject.fragments.PatientListFragment;
 
 public class DoctorActivity extends AppCompatActivity {
 
@@ -28,7 +32,14 @@ public class DoctorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.doctor_activity); // Make sure this is your main layout with BottomNavigationView
+        String doctorJson = getIntent().getStringExtra("doctor_data");
+        Doctor doctor = new Gson().fromJson(doctorJson, Doctor.class);
+        // Method 2: Get from SharedPreferences (useful if activity gets recreated)
+        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        String firstName = prefs.getString("doctor_firstName", "");
+        String lastName = prefs.getString("doctor_lastName", "");
+        String profilePic = prefs.getString("doctor_profilePicture", "");
+        setContentView(R.layout.doctor_activity);
 
         // Initialize views
         doctorName = findViewById(R.id.doctorName);
@@ -38,7 +49,7 @@ public class DoctorActivity extends AppCompatActivity {
         bottomNav = findViewById(R.id.bottom_navigation);
 
         // Set doctor details
-        doctorName.setText("Dr. John Doe");
+        doctorName.setText("Dr "+firstName + " "+ lastName);
         doctorStatus.setText("Available");
         doctorStatus.setTextColor(getResources().getColor(R.color.NeonGreen));
 
@@ -61,44 +72,33 @@ public class DoctorActivity extends AppCompatActivity {
 
         // Load default fragment
         if (savedInstanceState == null) {
-            bottomNav.setSelectedItemId(R.id.nav_accueil); // Set default selected item
+            bottomNav.setSelectedItemId(R.id.nav_accueil);
         }
     }
 
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
             item -> {
                 int itemId = item.getItemId();
-if (itemId == R.id.nav_accueil){
-    showToast("Back To Home");
-    showMainContent();
-    return true;
-}
-               else if (itemId == R.id.nav_rdv) {
-                    showToast("rendezvous selected");
+                if (itemId == R.id.nav_accueil) {
+                    showToast("Back To Home");
                     showMainContent();
                     return true;
-                }
-                else if (itemId == R.id.nav_ai) {
+                } else if (itemId == R.id.nav_rdv) {
+                    showToast("Rendez-vous selected");
+                    showMainContent();
+                    return true;
+                } else if (itemId == R.id.nav_ai) {
                     showAssistantFragment();
                     return true;
-                }
-                else if (itemId == R.id.nav_fiche) {
-                    showToast("Fiche selected");
+                } else if (itemId == R.id.nav_fiche) {
+                    showPatientListFragment();
                     return true;
                 }
-
                 return false;
             };
 
     private void showAssistantFragment() {
-        // Hide original content safely
-        View header = findViewById(R.id.headerLayout);
-        if (header != null) header.setVisibility(View.GONE);
-
-        View content = findViewById(R.id.action_grid_container);
-        if (content != null) content.setVisibility(View.GONE);
-
-        // Show fragment with error handling
+        hideMainContent();
         try {
             getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -106,7 +106,6 @@ if (itemId == R.id.nav_accueil){
                     .addToBackStack("assistant")
                     .commit();
         } catch (IllegalStateException e) {
-
             if (!isFinishing()) {
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -114,6 +113,32 @@ if (itemId == R.id.nav_accueil){
                         .commitAllowingStateLoss();
             }
         }
+    }
+
+    private void showPatientListFragment() {
+        hideMainContent();
+        try {
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.fragment_container, new PatientListFragment())
+                    .addToBackStack("patient_list")
+                    .commit();
+        } catch (IllegalStateException e) {
+            if (!isFinishing()) {
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container, new PatientListFragment())
+                        .commitAllowingStateLoss();
+            }
+        }
+    }
+
+    private void hideMainContent() {
+        View header = findViewById(R.id.headerLayout);
+        if (header != null) header.setVisibility(View.GONE);
+
+        View content = findViewById(R.id.action_grid_container);
+        if (content != null) content.setVisibility(View.GONE);
     }
 
     private void showMainContent() {
@@ -124,7 +149,7 @@ if (itemId == R.id.nav_accueil){
         View content = findViewById(R.id.action_grid_container);
         if (content != null) content.setVisibility(View.VISIBLE);
 
-        // Remove fragment safely
+        // Remove any fragments
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment != null && !isFinishing()) {
             getSupportFragmentManager().beginTransaction()
@@ -134,10 +159,18 @@ if (itemId == R.id.nav_accueil){
         }
     }
 
-
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-}
 
-// .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+            showMainContent();
+            bottomNav.setSelectedItemId(R.id.nav_accueil);
+        } else {
+            super.onBackPressed();
+        }
+    }
+}

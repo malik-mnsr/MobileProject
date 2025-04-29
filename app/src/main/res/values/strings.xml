@@ -5,4 +5,8 @@
     <string name="info_button_desc">Info</string>
     <string name="send_button_desc">Send message</string>
     <string name="type_your_message">Type your message...</string>
+    <string name="patient_photo">Photo du patient</string>
 </resources>
+
+
+

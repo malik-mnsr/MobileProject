@@ -15,4 +15,5 @@
     <color name="salt_blue">#A0C4FF</color>
     <color name="transparent">#00000000</color>
     <color name="SaltGray">#EEEEEE</color>
+    <color name="red">#FF0000</color>
 </resources>

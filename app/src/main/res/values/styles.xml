@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources><style name="DoctorStatusText" parent="TextAppearance.AppCompat.Caption">
+    <item name="android:textSize">@dimen/status_text_size</item>
+    <item name="android:letterSpacing">0.03</item>
+    <item name="fontFamily">@font/poppins_light</item>
+</style>
+
+    <style name="ActionButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="cornerRadius">@dimen/action_button_corner_radius</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:minHeight">72dp</item>
+        <item name="android:padding">16dp</item>
+    </style></resources>
