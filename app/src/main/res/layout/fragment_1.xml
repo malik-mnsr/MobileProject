@@ -223,7 +223,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Upload Photo"
-                        android:textColor="@color/LapisLazuli"
+                        android:textColor="@color/Teal"
                         android:textSize="14sp"
                         android:padding="4dp"/>
                 </LinearLayout>
@@ -242,7 +242,7 @@
                     android:text="Sign Up"
                     android:textSize="14sp"
                     app:cornerRadius="8dp"
-                    app:backgroundTint="@color/LapisLazuli"/>
+                    app:backgroundTint="@color/Teal"/>
 
         </LinearLayout>
         </androidx.cardview.widget.CardView>

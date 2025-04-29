@@ -1,4 +1,4 @@
-package com.hai811i.mobileproject.implementation;
+package com.hai811i.mobileproject.utils;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;

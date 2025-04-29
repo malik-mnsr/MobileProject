@@ -1,4 +1,4 @@
-package com.hai811i.mobileproject;
+package com.hai811i.mobileproject.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.hai811i.mobileproject.R;
 import com.hai811i.mobileproject.entity.Patient;
 import java.util.List;
 

@@ -13,7 +13,7 @@ public class RetrofitClient {
 
     private RetrofitClient() {}
 
-    public static synchronized ApiService getApiService() { // Changed return type to ApiService
+    public static synchronized ApiService getApiService() {
         if (retrofit == null) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -28,6 +28,6 @@ public class RetrofitClient {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
-        return retrofit.create(ApiService.class); // Matches your interface name
+        return retrofit.create(ApiService.class);
     }
 }

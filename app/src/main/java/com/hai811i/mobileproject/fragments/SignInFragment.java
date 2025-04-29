@@ -19,13 +19,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.hai811i.mobileproject.ChoixActivity;
 import com.hai811i.mobileproject.DoctorActivity;
 import com.hai811i.mobileproject.R;
-import com.hai811i.mobileproject.api.ApiService;
 import com.hai811i.mobileproject.api.RetrofitClient;
 import com.hai811i.mobileproject.implementation.DoctorRepositoryImpl;
-import com.hai811i.mobileproject.implementation.SignInViewModelFactory;
+import com.hai811i.mobileproject.utils.SignInViewModelFactory;
 import com.hai811i.mobileproject.repository.DoctorRepository;
 import com.hai811i.mobileproject.repository.LoginCallback;
-import com.hai811i.mobileproject.request.LoginRequest;
 import com.hai811i.mobileproject.response.LoginResponse;
 import com.hai811i.mobileproject.viewmodel.SignInViewModel;
 public class SignInFragment extends Fragment {

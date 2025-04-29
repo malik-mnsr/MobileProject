@@ -1,7 +1,10 @@
 package com.hai811i.mobileproject;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,6 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.fragments.AssistantFragment;
+import com.hai811i.mobileproject.fragments.DoctorProfileFragment;
 import com.hai811i.mobileproject.fragments.PatientListFragment;
 
 public class DoctorActivity extends AppCompatActivity {
@@ -54,7 +60,16 @@ public class DoctorActivity extends AppCompatActivity {
         doctorStatus.setTextColor(getResources().getColor(R.color.NeonGreen));
 
         // Profile picture click listener
-        imageViewProfile.setOnClickListener(v -> showToast("Profile picture clicked"));
+        // Replace the existing profile picture click listener with:
+        imageViewProfile.setOnClickListener(v -> {
+            DoctorProfileFragment profileFragment = new DoctorProfileFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.fragment_container, profileFragment)
+                    .addToBackStack("doctor_profile")
+                    .commit();
+            hideMainContent();
+        });
 
         // Action Grid click listeners
         consultationOption = findViewById(R.id.consultationButton);
@@ -66,7 +81,7 @@ public class DoctorActivity extends AppCompatActivity {
         homeVisitOption.setOnClickListener(v -> showToast("Home Visit clicked"));
         emergencyOption.setOnClickListener(v -> showToast("Emergency clicked"));
         dndOption.setOnClickListener(v -> showToast("Do Not Disturb clicked"));
-
+        loadProfilePicture(profilePic);
         // Bottom Navigation setup
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
@@ -171,6 +186,42 @@ public class DoctorActivity extends AppCompatActivity {
             bottomNav.setSelectedItemId(R.id.nav_accueil);
         } else {
             super.onBackPressed();
+        }
+    }
+    private void loadProfilePicture(String profilePicData) {
+        if (profilePicData != null && !profilePicData.isEmpty()) {
+            try {
+                // Check if the data is Base64 encoded
+                if (isBase64(profilePicData)) {
+                    // Decode Base64 string to byte array
+                    byte[] imageBytes = Base64.decode(profilePicData, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+                    RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(
+                            getResources(),
+                            bitmap
+                    );
+                    roundedDrawable.setCircular(true);
+                    roundedDrawable.setAntiAlias(true);
+                    imageViewProfile.setImageDrawable(roundedDrawable);
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        // Fallback to default
+        imageViewProfile.setImageResource(R.drawable.ic_default_profile);
+    }
+
+    private boolean isBase64(String str) {
+        // Simple check for Base64 string
+        if (str == null) return false;
+        try {
+            Base64.decode(str, Base64.DEFAULT);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
 }

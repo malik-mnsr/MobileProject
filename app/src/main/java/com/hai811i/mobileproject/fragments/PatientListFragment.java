@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hai811i.mobileproject.PatientAdapter;
+import com.hai811i.mobileproject.utils.PatientAdapter;
 import com.hai811i.mobileproject.R;
 import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.entity.Patient;

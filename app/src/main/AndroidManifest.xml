@@ -15,7 +15,7 @@
         android:theme="@style/Theme.MobileProject"
         tools:targetApi="31">
         <activity
-            android:name=".ChoixActivity"
+            android:name=".RoleSelectionActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".DoctorActivity"/>
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".ChoixActivity"/>
     </application>
 
 </manifest>

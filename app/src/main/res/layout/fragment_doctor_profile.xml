@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Profile Picture -->
+        <ImageView
+            android:id="@+id/profile_image_large"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="24dp"
+            android:src="@drawable/ic_default_profile"
+            android:scaleType="centerCrop" />
+
+        <!-- Doctor Name -->
+        <TextView
+            android:id="@+id/doctor_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"
+            android:textColor="@android:color/white" />
+
+        <!-- Info Cards (ID, Age, Email, Specialty, Phone, Mode) -->
+        <!-- Repeat this CardView block for each field -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            card_view:cardCornerRadius="12dp"
+            card_view:cardElevation="6dp"
+            card_view:cardBackgroundColor="@android:color/white"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ID:"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/doctor_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Age -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            card_view:cardCornerRadius="12dp"
+            card_view:cardElevation="6dp"
+            card_view:cardBackgroundColor="@android:color/white"
+            android:padding="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Age:"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/doctor_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Email -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            card_view:cardCornerRadius="12dp"
+            card_view:cardElevation="6dp"
+            card_view:cardBackgroundColor="@android:color/white"
+            android:padding="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email:"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/doctor_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Specialty -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            card_view:cardCornerRadius="12dp"
+            card_view:cardElevation="6dp"
+            card_view:cardBackgroundColor="@android:color/white"
+            android:padding="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Specialty:"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/doctor_specialty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Phone -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            card_view:cardCornerRadius="12dp"
+            card_view:cardElevation="6dp"
+            card_view:cardBackgroundColor="@android:color/white"
+            android:padding="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone:"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/doctor_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Mode -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            card_view:cardCornerRadius="12dp"
+            card_view:cardElevation="6dp"
+            card_view:cardBackgroundColor="@android:color/white"
+            android:padding="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current Mode:"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/doctor_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Close Button -->
+        <Button
+            android:id="@+id/close_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Close"
+            android:backgroundTint="@color/Teal"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/poppins_medium" />
+
+    </LinearLayout>
+</ScrollView>

@@ -82,7 +82,7 @@
                 app:cornerRadius="12dp"
                 app:iconGravity="textStart"
                 app:iconPadding="8dp"
-                app:iconTint="@color/LapisLazuli"
+                app:iconTint="@color/Teal"
                 app:strokeColor="@color/Teal"
                 app:strokeWidth="1dp"/>
 
@@ -92,7 +92,7 @@
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:backgroundTint="@color/LapisLazuli"
+                android:backgroundTint="@color/Teal"
                 android:text="Connexion"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
