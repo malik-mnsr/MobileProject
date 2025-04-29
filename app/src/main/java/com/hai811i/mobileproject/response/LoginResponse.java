@@ -1,11 +1,12 @@
+// LoginResponse.java
 package com.hai811i.mobileproject.response;
 
 import com.hai811i.mobileproject.entity.Doctor;
 
 public class LoginResponse {
-    private boolean success;
-    private String message;
     private Doctor doctor;
+    private String message;
+    private boolean success;
 
     public LoginResponse(Doctor doctor, String message, boolean success) {
         this.doctor = doctor;
@@ -13,12 +14,13 @@ public class LoginResponse {
         this.success = success;
     }
 
-    public boolean isSuccess() {
-        return success;
+    // Getters and setters
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 
     public String getMessage() {
@@ -29,11 +31,11 @@ public class LoginResponse {
         this.message = message;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }

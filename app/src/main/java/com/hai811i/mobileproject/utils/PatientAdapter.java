@@ -63,7 +63,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
         }
 
         void bind(Patient patient) {
-            // Set texts normally...
+
             tvName.setText(patient.getFirstName() + " " + patient.getLastName());
             tvAge.setText("Âge: " + patient.getAge());
             tvAddress.setText("Adresse: " + patient.getAddress());

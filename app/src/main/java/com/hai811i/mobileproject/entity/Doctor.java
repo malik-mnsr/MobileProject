@@ -1,5 +1,8 @@
 package com.hai811i.mobileproject.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Doctor {
     private int id;
     private String firstName;
@@ -12,9 +15,20 @@ public class Doctor {
     private String profilePictureContentType;
     private String currentMode;
 
+
+    private List<Patient> patients;
+    public Doctor(String firstName, String lastName, int age, String email,String specialty, String phone){
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.age=age;
+        this.email=email;
+        this.specialty=specialty;
+        this.phone=phone;
+    }
     // Constructeur
+    public Doctor(){}
     public Doctor(int id, String firstName, String lastName, int age, String email, String specialty,
-                  String phone, String profilePicture, String profilePictureContentType, String currentMode) {
+                  String phone, String profilePicture, String profilePictureContentType, String currentMode, List<Patient> patients) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -25,6 +39,7 @@ public class Doctor {
         this.profilePicture = profilePicture;
         this.profilePictureContentType = profilePictureContentType;
         this.currentMode = currentMode;
+        this.patients= new ArrayList<>();
     }
 
     // Getters et Setters
@@ -106,5 +121,13 @@ public class Doctor {
 
     public void setCurrentMode(String currentMode) {
         this.currentMode = currentMode;
+    }
+
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(List<Patient> patients) {
+        this.patients = patients;
     }
 }

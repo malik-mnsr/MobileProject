@@ -61,38 +61,8 @@ public class PatientListFragment extends Fragment {
         new Handler().postDelayed(() -> {
             patientList.clear();
 
-            // Sample data - replace with your actual data source
-            Doctor doctor1 = new Doctor(1, "Jean", "Dupont", 45, "jean.dupont@example.com",
-                    "Cardiologie", "0123456789", "base64encodedimage", "image/jpeg", "available");
 
-// Exemple de patientList
-            patientList.add(new Patient(
-                    1,
-                    "patient1@example.com",
-                    "Pierre",
-                    "Durand",
-                    35,
-                    "0612345678",
-                    "12 Rue de la Paix",
-                    "base64encodedimage",
-                    "image/jpeg",
-                    doctor1,
-                    Arrays.asList("Diabète", "Hypertension") // Exemples d'antécédents
-            ));
 
-            patientList.add(new Patient(
-                    2,
-                    "patient2@example.com",
-                    "Sophie",
-                    "Leroy",
-                    42,
-                    "0698765432",
-                    "34 Avenue des Champs",
-                    "",
-                    "image/jpeg",
-                    doctor1,
-                    Collections.singletonList("Asthme") // Un seul antécédent
-            ));
 
 
             adapter.notifyDataSetChanged();

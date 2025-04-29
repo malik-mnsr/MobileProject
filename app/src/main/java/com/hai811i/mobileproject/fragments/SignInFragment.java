@@ -21,16 +21,17 @@ import com.hai811i.mobileproject.DoctorActivity;
 import com.hai811i.mobileproject.R;
 import com.hai811i.mobileproject.api.RetrofitClient;
 import com.hai811i.mobileproject.implementation.DoctorRepositoryImpl;
-import com.hai811i.mobileproject.utils.SignInViewModelFactory;
+import com.hai811i.mobileproject.utils.ProjectViewModelFactory;
+
 import com.hai811i.mobileproject.repository.DoctorRepository;
 import com.hai811i.mobileproject.repository.LoginCallback;
 import com.hai811i.mobileproject.response.LoginResponse;
-import com.hai811i.mobileproject.viewmodel.SignInViewModel;
+import com.hai811i.mobileproject.viewmodel.ProjectViewModel;
 public class SignInFragment extends Fragment {
 
     private TextInputEditText editTextEmail, editTextPassword;
     private MaterialButton loginButton;
-    private SignInViewModel signInViewModel;
+    private ProjectViewModel signInViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +45,7 @@ public class SignInFragment extends Fragment {
 
         // Initialize ViewModel with the custom factory
         DoctorRepository doctorRepository = new DoctorRepositoryImpl(RetrofitClient.getApiService());
-        signInViewModel = new ViewModelProvider(this, new SignInViewModelFactory(doctorRepository)).get(SignInViewModel.class);
+        signInViewModel = new ViewModelProvider(this, new ProjectViewModelFactory(doctorRepository)).get(ProjectViewModel.class);
 
         // Handle back button click
         ImageButton backButton = view.findViewById(R.id.backButton);
@@ -86,36 +87,40 @@ public class SignInFragment extends Fragment {
             return;
         }
 
-        // Use ViewModel to make the login request
-        signInViewModel.loginDoctor(email, phone, new LoginCallback() {
-            @Override
-            public void onSuccess(LoginResponse response) {
-                if (isAdded() && getActivity() != null) {  // Check if the fragment is attached to an activity
-                    getActivity().runOnUiThread(() -> {
-                        loginButton.setEnabled(true);
-                        loginButton.setText("Secure Login");
+        // Call handleLogin if validation passes
+        handleLogin(email, phone);
+    }
 
-                        if (response.isSuccess()) {
-                            // Save user data and navigate
-                            saveUserData(response);
-                            navigateToMainScreen();
-                        } else {
-                            Toast.makeText(requireContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+    private void handleLogin(String email, String phone) {
+        // Disable button during request
+        loginButton.setEnabled(false);
+        loginButton.setText("Logging in...");
+
+        // Observe ViewModel LiveData
+        signInViewModel.getLoginResponse().observe(getViewLifecycleOwner(), response -> {
+            if (response != null) {
+                loginButton.setEnabled(true);
+                loginButton.setText("Secure Login");
+
+                if (response.isSuccess()) {
+                    saveUserData(response);
+                    navigateToMainScreen();
+                } else {
+                    Toast.makeText(requireContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
+        });
 
-
-            @Override
-            public void onFailure(String errorMessage) {
-                requireActivity().runOnUiThread(() -> {
-                    loginButton.setEnabled(true);
-                    loginButton.setText("Secure Login");
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                });
+        signInViewModel.getLoginError().observe(getViewLifecycleOwner(), errorMessage -> {
+            if (errorMessage != null) {
+                loginButton.setEnabled(true);
+                loginButton.setText("Secure Login");
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Trigger the login
+        signInViewModel.loginDoctor(email, phone);
     }
 
     private void saveUserData(LoginResponse response) {
@@ -137,11 +142,9 @@ public class SignInFragment extends Fragment {
         editor.apply();
     }
 
-
     private void navigateToMainScreen() {
         Intent intent = new Intent(getActivity(), DoctorActivity.class);
         startActivity(intent);
         requireActivity().finish();
     }
-
 }

@@ -22,11 +22,11 @@
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_logo"
+        android:src="@drawable/ic_doctor"
         android:layout_marginBottom="16dp"
         android:elevation="10dp"
         android:outlineProvider="background"
-        />
+        app:tint="@color/crayola" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
-                android:text="Welcome"
+                android:text="Welcome, Doctor"
                 android:textAlignment="center"
                 android:textColor="@color/text"
                 android:fontFamily="@font/poppins_bold"
