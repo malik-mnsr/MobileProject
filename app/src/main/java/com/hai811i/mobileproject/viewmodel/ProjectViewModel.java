@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.hai811i.mobileproject.dto.DoctorRequestWithBase64;
+import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
 import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.repository.DoctorCallback;
 import com.hai811i.mobileproject.repository.DoctorRepository;

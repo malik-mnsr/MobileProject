@@ -1,6 +1,4 @@
-package com.hai811i.mobileproject.dto;
-
-import com.hai811i.mobileproject.request.PatientRequest;
+package com.hai811i.mobileproject.request;
 
 import java.util.List;
 

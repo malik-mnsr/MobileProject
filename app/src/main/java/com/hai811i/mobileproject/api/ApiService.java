@@ -1,9 +1,7 @@
 package com.hai811i.mobileproject.api;
 
-import com.hai811i.mobileproject.dto.DoctorRequestWithBase64;
+import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
 import com.hai811i.mobileproject.entity.Doctor;
-import com.hai811i.mobileproject.request.LoginRequest;
-import com.hai811i.mobileproject.response.LoginResponse;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -12,24 +10,14 @@ import retrofit2.http.Body;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 
-import retrofit2.Call;
-import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
 
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
 import retrofit2.http.PUT;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 import java.util.List;
 

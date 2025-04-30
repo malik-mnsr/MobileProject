@@ -2,7 +2,7 @@
 package com.hai811i.mobileproject.implementation;
 
 import com.hai811i.mobileproject.api.ApiService;
-import com.hai811i.mobileproject.dto.DoctorRequestWithBase64;
+import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
 import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.repository.DoctorCallback;
 import com.hai811i.mobileproject.repository.DoctorRepository;

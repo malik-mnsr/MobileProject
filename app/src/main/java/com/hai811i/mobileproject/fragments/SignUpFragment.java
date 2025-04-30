@@ -28,7 +28,7 @@ import com.hai811i.mobileproject.ChoixActivity;
 import com.hai811i.mobileproject.DoctorActivity;
 import com.hai811i.mobileproject.R;
 import com.hai811i.mobileproject.api.RetrofitClient;
-import com.hai811i.mobileproject.dto.DoctorRequestWithBase64;
+import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
 import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.implementation.DoctorRepositoryImpl;
 import com.hai811i.mobileproject.repository.DoctorRepository;
@@ -41,9 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 public class SignUpFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
