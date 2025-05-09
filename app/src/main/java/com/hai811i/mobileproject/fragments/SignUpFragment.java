@@ -28,6 +28,14 @@ import com.hai811i.mobileproject.ChoixActivity;
 import com.hai811i.mobileproject.DoctorActivity;
 import com.hai811i.mobileproject.R;
 import com.hai811i.mobileproject.api.RetrofitClient;
+import com.hai811i.mobileproject.implementation.AppointmentRepositoryImpl;
+import com.hai811i.mobileproject.implementation.GoogleCalendarRepositoryImpl;
+import com.hai811i.mobileproject.implementation.PatientRepositoryImpl;
+import com.hai811i.mobileproject.implementation.SlotRepositoryImpl;
+import com.hai811i.mobileproject.repository.AppointmentRepository;
+import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
+import com.hai811i.mobileproject.repository.PatientRepository;
+import com.hai811i.mobileproject.repository.SlotRepository;
 import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
 import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.implementation.DoctorRepositoryImpl;
@@ -77,9 +85,13 @@ public class SignUpFragment extends Fragment {
         imageViewProfile = view.findViewById(R.id.imageViewProfile);
 
         // Initialize ViewModel
+        GoogleCalendarRepository googleCalendarRepository = new GoogleCalendarRepositoryImpl(RetrofitClient.getApiService());
+        AppointmentRepository appointmentRepository = new AppointmentRepositoryImpl(RetrofitClient.getApiService());
+        PatientRepository patientRepository = new PatientRepositoryImpl(RetrofitClient.getApiService());
         DoctorRepository doctorRepository = new DoctorRepositoryImpl(RetrofitClient.getApiService());
+        SlotRepository slotRepository = new SlotRepositoryImpl(RetrofitClient.getApiService());
         signUpViewModel = new ViewModelProvider(this,
-                new ProjectViewModelFactory(doctorRepository)).get(ProjectViewModel.class);
+                new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository)).get(ProjectViewModel.class);
 
         // Set up observers
         setupObservers();

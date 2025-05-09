@@ -1,5 +1,31 @@
 package com.hai811i.mobileproject.api;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.hai811i.mobileproject.utils.LocalDateTimeAdapter;
+
+import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -8,25 +34,52 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "http://192.168.224.33:8080/"; // Make sure this is correct
     private static Retrofit retrofit;
+    private static final String BASE_URL = "http://192.168.224.33:8080/";
 
-    private RetrofitClient() {}
+    // Custom adapter for LocalDateTime
+    private static class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
+        private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
+        @Override
+        public JsonElement serialize(LocalDateTime src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(formatter.format(src));
+        }
+
+        @Override
+        public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            return LocalDateTime.parse(json.getAsString(), formatter);
+        }
+    }
+
+    // Thread-safe Retrofit instance creation
     public static synchronized ApiService getApiService() {
         if (retrofit == null) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            try {
+                // Configure Gson with LocalDateTime adapter
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                        .create();
 
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(logging)
-                    .build();
+                // Configure OkHttp with logging
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                        .connectTimeout(30, TimeUnit.SECONDS)
+                        .readTimeout(30, TimeUnit.SECONDS)
+                        .writeTimeout(30, TimeUnit.SECONDS)
+                        .build();
 
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+                // Build Retrofit instance
+                retrofit = new Retrofit.Builder()
+                        .baseUrl(BASE_URL)
+                        .client(okHttpClient)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
+
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to initialize Retrofit", e);
+            }
         }
         return retrofit.create(ApiService.class);
     }

@@ -1,5 +1,10 @@
 package com.hai811i.mobileproject.repository;
 
+import com.hai811i.mobileproject.callback.DoctorCallback;
+import com.hai811i.mobileproject.callback.DoctorsListCallback;
+import com.hai811i.mobileproject.callback.LoginCallback;
+import com.hai811i.mobileproject.callback.ProfilePictureCallback;
+import com.hai811i.mobileproject.callback.VoidCallback;
 import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
 import com.hai811i.mobileproject.entity.Doctor;
 
@@ -22,9 +27,9 @@ public interface DoctorRepository {
 
     void deleteDoctor(int id, VoidCallback callback);
 
-    void uploadProfilePicture(int id, MultipartBody.Part file, VoidCallback callback);
+    void uploadDoctorProfilePicture(int id, MultipartBody.Part file, VoidCallback callback);
 
-    void getProfilePicture(int id, ProfilePictureCallback callback);
+    void getDoctorProfilePicture(int id, ProfilePictureCallback callback);
 
     void createDoctorWithPicture(RequestBody doctorRequest, MultipartBody.Part picture, DoctorCallback callback);
 

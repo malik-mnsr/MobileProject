@@ -1,7 +1,6 @@
-package com.hai811i.mobileproject.repository;
+package com.hai811i.mobileproject.callback;
 
 
-import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.response.LoginResponse;
 
 public interface LoginCallback {

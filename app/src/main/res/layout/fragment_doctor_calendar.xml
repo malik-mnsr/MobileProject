@@ -1,0 +1,183 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/background_gradient">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Calendar Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Manage Your Availability"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Month Navigation -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <ImageButton
+                android:id="@+id/btn_prev_month"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_arrow_back"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+
+            <TextView
+                android:id="@+id/tv_month_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="May 2023"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_semibold"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"/>
+
+            <ImageButton
+                android:id="@+id/btn_next_month"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_arrow_right"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+        </LinearLayout>
+
+        <!-- Weekday Labels -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="7"
+            android:rowCount="1"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Sun"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_regular"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Mon"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_regular"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Tue"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_regular"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Wed"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_regular"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Thu"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_regular"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Fri"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_regular"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Sat"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_regular"/>
+        </GridLayout>
+        <GridLayout
+            android:id="@+id/calendar_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="7"
+            android:rowCount="6"/>
+
+        <!-- Time Slots Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Available Time Slots"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_semibold"/>
+
+            <Button
+                android:id="@+id/btn_add_time_slot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Slot"
+                android:layout_marginStart="16dp"
+                android:backgroundTint="@color/Teal"/>
+        </LinearLayout>
+
+        <!-- Time Slots Grid -->
+        <GridLayout
+            android:id="@+id/time_slots_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:rowCount="4"
+            android:alignmentMode="alignMargins"
+            android:columnOrderPreserved="false"
+            android:layout_marginBottom="24dp">
+        </GridLayout>
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btn_save_slots"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Save Availability"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/LapisLazuli"
+            android:textSize="16sp"
+            android:fontFamily="@font/poppins_semibold"/>
+    </LinearLayout>
+</ScrollView>

@@ -20,11 +20,18 @@ import com.hai811i.mobileproject.ChoixActivity;
 import com.hai811i.mobileproject.DoctorActivity;
 import com.hai811i.mobileproject.R;
 import com.hai811i.mobileproject.api.RetrofitClient;
+import com.hai811i.mobileproject.implementation.AppointmentRepositoryImpl;
 import com.hai811i.mobileproject.implementation.DoctorRepositoryImpl;
+import com.hai811i.mobileproject.implementation.GoogleCalendarRepositoryImpl;
+import com.hai811i.mobileproject.implementation.PatientRepositoryImpl;
+import com.hai811i.mobileproject.implementation.SlotRepositoryImpl;
+import com.hai811i.mobileproject.repository.AppointmentRepository;
+import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
+import com.hai811i.mobileproject.repository.PatientRepository;
+import com.hai811i.mobileproject.repository.SlotRepository;
 import com.hai811i.mobileproject.utils.ProjectViewModelFactory;
 
 import com.hai811i.mobileproject.repository.DoctorRepository;
-import com.hai811i.mobileproject.repository.LoginCallback;
 import com.hai811i.mobileproject.response.LoginResponse;
 import com.hai811i.mobileproject.viewmodel.ProjectViewModel;
 public class SignInFragment extends Fragment {
@@ -42,10 +49,14 @@ public class SignInFragment extends Fragment {
         editTextEmail = view.findViewById(R.id.editTextEmail);
         editTextPassword = view.findViewById(R.id.editTextPassword);
         loginButton = view.findViewById(R.id.login_button);
-
-        // Initialize ViewModel with the custom factory
+        GoogleCalendarRepository googleCalendarRepository = new GoogleCalendarRepositoryImpl(RetrofitClient.getApiService());
+        AppointmentRepository appointmentRepository = new AppointmentRepositoryImpl(RetrofitClient.getApiService());
+        PatientRepository patientRepository = new PatientRepositoryImpl(RetrofitClient.getApiService());
         DoctorRepository doctorRepository = new DoctorRepositoryImpl(RetrofitClient.getApiService());
-        signInViewModel = new ViewModelProvider(this, new ProjectViewModelFactory(doctorRepository)).get(ProjectViewModel.class);
+        SlotRepository slotRepository = new SlotRepositoryImpl(RetrofitClient.getApiService());
+
+
+        signInViewModel = new ViewModelProvider(this, new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository)).get(ProjectViewModel.class);
 
         // Handle back button click
         ImageButton backButton = view.findViewById(R.id.backButton);

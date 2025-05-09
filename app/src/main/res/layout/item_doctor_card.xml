@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="8dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="16dp"
     android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
@@ -16,15 +16,18 @@
 
         <ImageView
             android:id="@+id/iv_doctor"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/ic_default_profile"
             android:layout_marginEnd="16dp"
-            android:contentDescription="Doctor image"/>
+            android:contentDescription="Doctor image"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_background"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -33,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="Doctor Name"
                 android:textSize="16sp"
-                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:fontFamily="@font/poppins_semibold"/>
 
             <TextView
@@ -42,16 +45,30 @@
                 android:layout_height="wrap_content"
                 android:text="Specialty"
                 android:textSize="14sp"
+                android:textColor="@color/LapisLazuli"
                 android:layout_marginTop="4dp"/>
 
-            <Button
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tv_experience"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Book Now"
-                android:layout_marginTop="8dp"
-                android:paddingHorizontal="16dp"
-                android:backgroundTint="@color/LapisLazuli"
-                android:textColor="@android:color/white"/>
+                android:text="Experience"
+                android:textSize="12sp"
+                android:textColor="@color/Teal"
+                android:layout_marginTop="4dp"/>
+
+
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_book"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Book"
+            android:textSize="12sp"
+            android:backgroundTint="@color/LapisLazuli"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center"
+            android:paddingHorizontal="12dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

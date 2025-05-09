@@ -24,6 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.fragments.AssistantFragment;
+import com.hai811i.mobileproject.fragments.DoctorCalendarFragment;
 import com.hai811i.mobileproject.fragments.DoctorProfileFragment;
 import com.hai811i.mobileproject.fragments.PatientListFragment;
 
@@ -99,8 +100,11 @@ public class DoctorActivity extends AppCompatActivity {
                     showMainContent();
                     return true;
                 } else if (itemId == R.id.nav_rdv) {
-                    showToast("Rendez-vous selected");
-                    showMainContent();
+                    // Replace current fragment with DoctorCalendarFragment
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new DoctorCalendarFragment())
+                            .commit();
+
                     return true;
                 } else if (itemId == R.id.nav_ai) {
                     showAssistantFragment();

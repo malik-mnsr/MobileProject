@@ -1,9 +1,10 @@
 package com.hai811i.mobileproject.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Doctor {
+public class Doctor implements Serializable {
     private int id;
     private String firstName;
     private String lastName;

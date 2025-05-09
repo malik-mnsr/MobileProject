@@ -4,12 +4,12 @@ package com.hai811i.mobileproject.implementation;
 import com.hai811i.mobileproject.api.ApiService;
 import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
 import com.hai811i.mobileproject.entity.Doctor;
-import com.hai811i.mobileproject.repository.DoctorCallback;
+import com.hai811i.mobileproject.callback.DoctorCallback;
 import com.hai811i.mobileproject.repository.DoctorRepository;
-import com.hai811i.mobileproject.repository.DoctorsListCallback;
-import com.hai811i.mobileproject.repository.LoginCallback;
-import com.hai811i.mobileproject.repository.ProfilePictureCallback;
-import com.hai811i.mobileproject.repository.VoidCallback;
+import com.hai811i.mobileproject.callback.DoctorsListCallback;
+import com.hai811i.mobileproject.callback.LoginCallback;
+import com.hai811i.mobileproject.callback.ProfilePictureCallback;
+import com.hai811i.mobileproject.callback.VoidCallback;
 import com.hai811i.mobileproject.response.LoginResponse;
 
 import java.io.IOException;
@@ -167,8 +167,8 @@ public class DoctorRepositoryImpl implements DoctorRepository {
     }
 
     @Override
-    public void uploadProfilePicture(int id, MultipartBody.Part file, VoidCallback callback) {
-        apiService.uploadProfilePicture(id, file).enqueue(new Callback<Void>() {
+    public void uploadDoctorProfilePicture(int id, MultipartBody.Part file, VoidCallback callback) {
+        apiService.uploadDoctorProfilePicture(id, file).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -186,8 +186,8 @@ public class DoctorRepositoryImpl implements DoctorRepository {
     }
 
     @Override
-    public void getProfilePicture(int id, ProfilePictureCallback callback) {
-        apiService.getProfilePicture(id).enqueue(new Callback<ResponseBody>() {
+    public void getDoctorProfilePicture(int id, ProfilePictureCallback callback) {
+        apiService.getDoctorProfilePicture(id).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -250,4 +250,6 @@ public class DoctorRepositoryImpl implements DoctorRepository {
             }
         });
     }
+
+
 }

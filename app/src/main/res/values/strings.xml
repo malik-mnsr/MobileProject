@@ -6,6 +6,8 @@
     <string name="send_button_desc">Send message</string>
     <string name="type_your_message">Type your message...</string>
     <string name="patient_photo">Photo du patient</string>
+    <string name="select_date">Select date</string>
+    <string name="select_time">Select time</string>
 </resources>
 
 

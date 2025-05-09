@@ -55,11 +55,11 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
 
         PatientViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivPicture = itemView.findViewById(R.id.iv_patient_picture);
-            tvName = itemView.findViewById(R.id.tv_patient_name);
-            tvAge = itemView.findViewById(R.id.tv_patient_age);
-            tvAddress = itemView.findViewById(R.id.tv_patient_address);
-            tvAntecedents = itemView.findViewById(R.id.tv_patient_antecedents);
+      //      ivPicture = itemView.findViewById(R.id.iv_patient_picture);
+        //    tvName = itemView.findViewById(R.id.tv_patient_name);
+          //  tvAge = itemView.findViewById(R.id.tv_patient_age);
+           // tvAddress = itemView.findViewById(R.id.tv_patient_address);
+          //  tvAntecedents = itemView.findViewById(R.id.tv_patient_antecedents);
         }
 
         void bind(Patient patient) {
