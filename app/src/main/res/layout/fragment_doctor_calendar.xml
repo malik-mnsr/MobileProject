@@ -165,8 +165,8 @@
             android:layout_height="wrap_content"
             android:columnCount="3"
             android:rowCount="4"
-            android:alignmentMode="alignMargins"
-            android:columnOrderPreserved="false"
+            android:useDefaultMargins="true"
+            android:alignmentMode="alignBounds"
             android:layout_marginBottom="24dp">
         </GridLayout>
         <!-- Save Button -->

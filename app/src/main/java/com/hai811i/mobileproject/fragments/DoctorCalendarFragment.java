@@ -133,6 +133,7 @@ public class DoctorCalendarFragment extends Fragment {
 
     private void setupCalendar() {
         calendarGrid.removeAllViews();
+        selectedDay = -1; // Reset selection when month changes
 
         Calendar calendar = (Calendar) currentCalendar.clone();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -186,8 +187,42 @@ public class DoctorCalendarFragment extends Fragment {
             dayButton.setBackgroundResource(R.drawable.calendar_today_bg);
         }
 
+        // Highlight selected date
+        if (day == selectedDay) {
+            dayButton.setBackgroundResource(R.drawable.calendar_selected_bg);
+            dayButton.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+        }
+
         dayButton.setOnClickListener(v -> {
+            // Reset previously selected day's appearance
+            for (int i = 0; i < calendarGrid.getChildCount(); i++) {
+                View child = calendarGrid.getChildAt(i);
+                if (child instanceof Button) {
+                    Button btn = (Button) child;
+                    try {
+                        int btnDay = Integer.parseInt(btn.getText().toString());
+                        if (btnDay == selectedDay) {
+                            // Reset to default or today's style
+                            if (currentCalendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+                                    currentCalendar.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
+                                    btnDay == today.get(Calendar.DAY_OF_MONTH)) {
+                                btn.setBackgroundResource(R.drawable.calendar_today_bg);
+                            } else {
+                                btn.setBackgroundResource(R.drawable.calendar_day_bg);
+                            }
+                            btn.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                        }
+                    } catch (NumberFormatException e) {
+                        // Ignore non-day buttons
+                    }
+                }
+            }
+
+            // Set new selected day
             selectedDay = day;
+            dayButton.setBackgroundResource(R.drawable.calendar_selected_bg);
+            dayButton.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+
             // Load time slots for selected day
             loadTimeSlotsForDay(day);
         });
@@ -249,14 +284,25 @@ public class DoctorCalendarFragment extends Fragment {
         slotButton.setText(time);
         slotButton.setBackgroundResource(R.drawable.time_slot_bg);
         slotButton.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+        slotButton.setPadding(8, 4, 8, 4); // Add padding inside the button
+        slotButton.setTextSize(12); // Smaller text size
 
-        // Set proper layout parameters
+        // Calculate the width to fit 3 items in a row with margins
+        int margin = 8; // 8dp margin
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int totalMargins = margin * 4; // margins on both sides (left+right) for 3 items
+        int itemWidth = (screenWidth - totalMargins) / 3;
+
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width = 0; // Will be stretched by weight
+        params.width = itemWidth;
         params.height = GridLayout.LayoutParams.WRAP_CONTENT;
-        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f); // Equal weight
-        params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-        params.setMargins(8, 8, 8, 8);
+        params.setMargins(margin, margin, margin, margin);
+
+        // This will automatically position the slots in a grid
+        int childCount = timeSlotsGrid.getChildCount();
+        params.rowSpec = GridLayout.spec(childCount / 3);
+        params.columnSpec = GridLayout.spec(childCount % 3);
+
         slotButton.setLayoutParams(params);
 
         slotButton.setOnLongClickListener(v -> {
@@ -329,16 +375,16 @@ public class DoctorCalendarFragment extends Fragment {
     }
 
     private void observeViewModel() {
-        // Remove the duplicate observer
         viewModel.getAvailableSlots().observe(getViewLifecycleOwner(), slots -> {
             timeSlotsGrid.removeAllViews();
 
             if (slots == null || slots.isEmpty()) {
                 TextView noSlotsText = new TextView(getContext());
                 noSlotsText.setText("No available slots for this date");
-                noSlotsText.setTextSize(16);
+                noSlotsText.setTextSize(14);
                 noSlotsText.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                 noSlotsText.setGravity(Gravity.CENTER);
+                noSlotsText.setPadding(0, 16, 0, 16);
 
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.width = GridLayout.LayoutParams.MATCH_PARENT;
@@ -367,4 +413,5 @@ public class DoctorCalendarFragment extends Fragment {
             btnSaveSlots.setEnabled(!isLoading);
         });
     }
+
 }
