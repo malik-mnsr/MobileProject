@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -39,7 +40,6 @@ dependencies {
         implementation(libs.activity)
         implementation(libs.constraintlayout)
         implementation(libs.retrofit)
-
         implementation(libs.converter.gson)
         implementation(libs.logging.interceptor)
         testImplementation(libs.junit)
@@ -47,6 +47,9 @@ dependencies {
         androidTestImplementation(libs.espresso.core)
         implementation(libs.jackson.databind)
         implementation(libs.jackson.jsr310)
+        implementation(platform(libs.firebase.bom))
+        implementation(libs.play.services.auth)
+        implementation("com.google.firebase:firebase-analytics")
     }
 
 }
