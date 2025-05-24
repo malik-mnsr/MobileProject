@@ -1,8 +1,9 @@
 package com.hai811i.mobileproject.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Patient {
+public class Patient implements Serializable {
     private int id;
     private String email;
     private String firstName;
@@ -13,13 +14,13 @@ public class Patient {
     private String profilePicture; // base64 encoded
     private String profilePictureContentType;
     private Doctor doctor;
-    private List<String> antecedents; // Nouvel attribut
+
 
     // Constructor
     public Patient(int id, String email, String firstName, String lastName, int age,
                    String phone, String address, String profilePicture,
-                   String profilePictureContentType, Doctor doctor,
-                   List<String> antecedents) {
+                   String profilePictureContentType, Doctor doctor
+                   ) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -30,7 +31,7 @@ public class Patient {
         this.profilePicture = profilePicture;
         this.profilePictureContentType = profilePictureContentType;
         this.doctor = doctor;
-        this.antecedents = antecedents;
+
     }
 
     // Getters and Setters
@@ -114,13 +115,8 @@ public class Patient {
         this.doctor = doctor;
     }
 
-    public List<String> getAntecedents() {
-        return antecedents;
-    }
 
-    public void setAntecedents(List<String> antecedents) {
-        this.antecedents = antecedents;
-    }
+
 
     @Override
     public String toString() {
@@ -135,7 +131,7 @@ public class Patient {
                 ", profilePicture='" + (profilePicture != null ? "[base64 image]" : "null") + '\'' +
                 ", profilePictureContentType='" + profilePictureContentType + '\'' +
                 ", doctor=" + (doctor != null ? doctor.getFirstName() + " " + doctor.getLastName() : "null") +
-                ", antecedents=" + antecedents +
+
                 '}';
     }
 }

@@ -27,11 +27,13 @@ import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.implementation.AppointmentRepositoryImpl;
 import com.hai811i.mobileproject.implementation.DoctorRepositoryImpl;
 import com.hai811i.mobileproject.implementation.GoogleCalendarRepositoryImpl;
+import com.hai811i.mobileproject.implementation.MedicalRecordRepositoryImpl;
 import com.hai811i.mobileproject.implementation.PatientRepositoryImpl;
 import com.hai811i.mobileproject.implementation.SlotRepositoryImpl;
 import com.hai811i.mobileproject.repository.AppointmentRepository;
 import com.hai811i.mobileproject.repository.DoctorRepository;
 import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
+import com.hai811i.mobileproject.repository.MedicalRecordRepository;
 import com.hai811i.mobileproject.repository.PatientRepository;
 import com.hai811i.mobileproject.repository.SlotRepository;
 import com.hai811i.mobileproject.utils.ProjectViewModelFactory;
@@ -62,8 +64,9 @@ public class AppointmentBookingFragment extends Fragment {
         PatientRepository patientRepository = new PatientRepositoryImpl(RetrofitClient.getApiService());
         DoctorRepository doctorRepository = new DoctorRepositoryImpl(RetrofitClient.getApiService());
         SlotRepository slotRepository = new SlotRepositoryImpl(RetrofitClient.getApiService());
+        MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepositoryImpl(RetrofitClient.getApiService());
         // Initialize ViewModel with factory
-        ProjectViewModelFactory factory = new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository);
+        ProjectViewModelFactory factory = new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository, medicalRecordRepository);
         viewModel = new ViewModelProvider(requireActivity(), factory).get(ProjectViewModel.class);
     }
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.hai811i.mobileproject.repository.AppointmentRepository;
 import com.hai811i.mobileproject.repository.DoctorRepository;
 import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
+import com.hai811i.mobileproject.repository.MedicalRecordRepository;
 import com.hai811i.mobileproject.repository.PatientRepository;
 import com.hai811i.mobileproject.repository.SlotRepository;
 import com.hai811i.mobileproject.viewmodel.ProjectViewModel;
@@ -17,17 +18,20 @@ public class ProjectViewModelFactory implements ViewModelProvider.Factory {
     private final SlotRepository slotRepository;
     private final AppointmentRepository appointmentRepository;
     private final GoogleCalendarRepository googleCalendarRepository;
+    private final MedicalRecordRepository medicalRecordRepository;
 
     public ProjectViewModelFactory(DoctorRepository doctorRepository,
                                    PatientRepository patientRepository,
                                    SlotRepository slotRepository,
                                    AppointmentRepository appointmentRepository,
-                                   GoogleCalendarRepository googleCalendarRepository) {
+                                   GoogleCalendarRepository googleCalendarRepository,
+                                   MedicalRecordRepository medicalRecordRepository) {
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.slotRepository = slotRepository;
         this.appointmentRepository = appointmentRepository;
         this.googleCalendarRepository = googleCalendarRepository;
+        this.medicalRecordRepository = medicalRecordRepository;
     }
 
     @NonNull
@@ -40,7 +44,8 @@ public class ProjectViewModelFactory implements ViewModelProvider.Factory {
                     patientRepository,
                     slotRepository,
                     appointmentRepository,
-                    googleCalendarRepository
+                    googleCalendarRepository,
+                    medicalRecordRepository
             );
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());

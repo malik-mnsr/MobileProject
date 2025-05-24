@@ -13,7 +13,9 @@ import com.hai811i.mobileproject.callback.VoidCallback;
 import com.hai811i.mobileproject.response.LoginResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -246,6 +248,28 @@ public class DoctorRepositoryImpl implements DoctorRepository {
 
             @Override
             public void onFailure(Call<Doctor> call, Throwable t) {
+                callback.onFailure("Network error: " + t.getMessage());
+            }
+        });
+    }
+
+    public void updateDoctorFcmToken(int doctorId, String token, VoidCallback callback) {
+        Map<String, String> tokenRequest = new HashMap<>();
+        tokenRequest.put("token", token);
+
+        Call<Void> call = apiService.updateDoctorFcmToken(doctorId, tokenRequest);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess();
+                } else {
+                    callback.onFailure("Failed to update FCM token: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
                 callback.onFailure("Network error: " + t.getMessage());
             }
         });

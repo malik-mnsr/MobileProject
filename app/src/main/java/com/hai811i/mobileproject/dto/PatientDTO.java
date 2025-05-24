@@ -1,6 +1,8 @@
 package com.hai811i.mobileproject.dto;
 
-public class PatientDTO {
+import java.io.Serializable;
+
+public class PatientDTO implements Serializable {
     private Long id;
     private String firstName;
     private String lastName;
@@ -8,7 +10,7 @@ public class PatientDTO {
     private String email;
     private String phone;
     private String address;
-
+    public  PatientDTO() {}
     // Constructor
     public PatientDTO(Long id, String firstName, String lastName, int age, String email, String phone, String address) {
         this.id = id;

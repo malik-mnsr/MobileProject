@@ -99,7 +99,7 @@ public class ChoixActivity extends AppCompatActivity {
         editor.putString("doctor_phone", response.getDoctor().getPhone());
         editor.putString("doctor_profilePicture", response.getDoctor().getProfilePicture());
         editor.putString("doctor_profilePictureContentType", response.getDoctor().getProfilePictureContentType());
-        editor.putString("doctor_currentMode", response.getDoctor().getCurrentMode());
+        editor.putString("doctor_currentMode", response.getDoctor().getCurrentMode().name());
 
         editor.apply();
 

@@ -67,7 +67,6 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
             tvName.setText(patient.getFirstName() + " " + patient.getLastName());
             tvAge.setText("Âge: " + patient.getAge());
             tvAddress.setText("Adresse: " + patient.getAddress());
-            tvAntecedents.setText("Antécédents: " + patient.getAntecedents());
 
             // Decode and set profile picture
             if (patient.getProfilePicture() != null && !patient.getProfilePicture().isEmpty()) {
@@ -91,12 +90,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
             // Adresse
             tvAddress.setText("Adresse : " + patient.getAddress());
 
-            // Antécédents
-            if (patient.getAntecedents() != null && !patient.getAntecedents().isEmpty()) {
-                tvAntecedents.setText("Antécédents : " + String.join(", ", patient.getAntecedents()));
-            } else {
-                tvAntecedents.setText("Antécédents : Aucun");
+
             }
         }
     }
-}

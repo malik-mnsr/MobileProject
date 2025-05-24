@@ -189,6 +189,7 @@
             android:rowCount="6"/>
 
         <!-- Time Slots Header -->
+        <!-- Time Slots Header -->
         <TextView
             android:id="@+id/tv_time_slots_header"
             android:layout_width="match_parent"
@@ -200,19 +201,22 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Time Slots Grid -->
-        <GridLayout
-            android:id="@+id/time_slots_grid"
+        <!-- Horizontal Scroll View for Time Slots -->
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="3"
-            android:rowCount="4"
-            android:alignmentMode="alignMargins"
-            android:columnOrderPreserved="false"
+            android:scrollbars="none"
+            android:fillViewport="true"
             android:layout_marginBottom="24dp">
 
-            <!-- Time slots will be added programmatically -->
-        </GridLayout>
+            <GridLayout
+                android:id="@+id/time_slots_grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="100"
+            android:rowCount="1"
+            android:orientation="horizontal"/>
+        </HorizontalScrollView>
 
         <!-- Book Appointment Button -->
         <Button

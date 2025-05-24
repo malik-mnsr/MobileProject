@@ -28,12 +28,15 @@ import com.hai811i.mobileproject.ChoixActivity;
 import com.hai811i.mobileproject.DoctorActivity;
 import com.hai811i.mobileproject.R;
 import com.hai811i.mobileproject.api.RetrofitClient;
+import com.hai811i.mobileproject.entity.WorkingMode;
 import com.hai811i.mobileproject.implementation.AppointmentRepositoryImpl;
 import com.hai811i.mobileproject.implementation.GoogleCalendarRepositoryImpl;
+import com.hai811i.mobileproject.implementation.MedicalRecordRepositoryImpl;
 import com.hai811i.mobileproject.implementation.PatientRepositoryImpl;
 import com.hai811i.mobileproject.implementation.SlotRepositoryImpl;
 import com.hai811i.mobileproject.repository.AppointmentRepository;
 import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
+import com.hai811i.mobileproject.repository.MedicalRecordRepository;
 import com.hai811i.mobileproject.repository.PatientRepository;
 import com.hai811i.mobileproject.repository.SlotRepository;
 import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
@@ -90,8 +93,9 @@ public class SignUpFragment extends Fragment {
         PatientRepository patientRepository = new PatientRepositoryImpl(RetrofitClient.getApiService());
         DoctorRepository doctorRepository = new DoctorRepositoryImpl(RetrofitClient.getApiService());
         SlotRepository slotRepository = new SlotRepositoryImpl(RetrofitClient.getApiService());
+        MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepositoryImpl(RetrofitClient.getApiService());
         signUpViewModel = new ViewModelProvider(this,
-                new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository)).get(ProjectViewModel.class);
+                new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository,medicalRecordRepository)).get(ProjectViewModel.class);
 
         // Set up observers
         setupObservers();
@@ -186,7 +190,7 @@ public class SignUpFragment extends Fragment {
         doctor.setEmail(email);
         doctor.setSpecialty(specialty);
         doctor.setPhone(phone);
-        doctor.setCurrentMode("NORMAL"); // Default mode
+        doctor.setCurrentMode(WorkingMode.NORMAL); // Default mode
 
         DoctorRequestWithBase64 request = new DoctorRequestWithBase64();
         request.setFirstName(firstName);
@@ -240,7 +244,7 @@ public class SignUpFragment extends Fragment {
         editor.putString("doctor_phone", doctor.getPhone());
         editor.putString("doctor_profilePicture", doctor.getProfilePicture());
         editor.putString("doctor_profilePictureContentType", doctor.getProfilePictureContentType());
-        editor.putString("doctor_currentMode", doctor.getCurrentMode());
+        editor.putString("doctor_currentMode", doctor.getCurrentMode().name());
         editor.putBoolean("is_logged_in", true);
 
         editor.apply();

@@ -24,79 +24,118 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
         this.apiService = apiService;
     }
 
-    @Override
-    public void reserveAppointment(Long slotId, ReserveRequest request, AppointmentCallback callback) {
-        apiService.reserveAppointment(slotId, request).enqueue(new Callback<AppointmentDTO>() {
-            @Override
-            public void onResponse(Call<AppointmentDTO> call, Response<AppointmentDTO> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    callback.onSuccess(response.body());
-                } else {
-                    callback.onFailure("Failed to reserve appointment: " + response.message());
+
+        @Override
+        public void reserveAppointment(Long slotId, ReserveRequest request, AppointmentCallback callback) {
+            apiService.reserveAppointment(slotId, request).enqueue(new Callback<AppointmentDTO>() {
+                @Override
+                public void onResponse(Call<AppointmentDTO> call, Response<AppointmentDTO> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body());
+                    } else {
+                        callback.onFailure("Failed to reserve appointment: " + response.message());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<AppointmentDTO> call, Throwable t) {
-                callback.onFailure("Network error: " + t.getMessage());
-            }
-        });
-    }
-
-    @Override
-    public void cancelAppointment(Long id, VoidCallback callback) {
-        apiService.cancelAppointment(id).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    callback.onSuccess();
-                } else {
-                    callback.onFailure("Failed to cancel appointment: " + response.message());
+                @Override
+                public void onFailure(Call<AppointmentDTO> call, Throwable t) {
+                    callback.onFailure("Network error: " + t.getMessage());
                 }
-            }
+            });
+        }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                callback.onFailure("Network error: " + t.getMessage());
-            }
-        });
-    }
-
-    @Override
-    public void getAppointmentsByDoctor(Long doctorId, AppointmentsListCallback callback) {
-        apiService.getAppointmentsByDoctor(doctorId).enqueue(new Callback<List<AppointmentDTO>>() {
-            @Override
-            public void onResponse(Call<List<AppointmentDTO>> call, Response<List<AppointmentDTO>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    callback.onSuccess(response.body());
-                } else {
-                    callback.onFailure("Failed to get doctor appointments: " + response.message());
+        @Override
+        public void cancelAppointment(Long id, VoidCallback callback) {
+            apiService.cancelAppointment(id).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onFailure("Failed to cancel appointment: " + response.message());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<AppointmentDTO>> call, Throwable t) {
-                callback.onFailure("Network error: " + t.getMessage());
-            }
-        });
-    }
-
-    @Override
-    public void getAppointmentsByPatient(Long patientId, AppointmentsListCallback callback) {
-        apiService.getAppointmentsByPatient(patientId).enqueue(new Callback<List<AppointmentDTO>>() {
-            @Override
-            public void onResponse(Call<List<AppointmentDTO>> call, Response<List<AppointmentDTO>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    callback.onSuccess(response.body());
-                } else {
-                    callback.onFailure("Failed to get patient appointments: " + response.message());
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    callback.onFailure("Network error: " + t.getMessage());
                 }
-            }
+            });
+        }
 
-            @Override
-            public void onFailure(Call<List<AppointmentDTO>> call, Throwable t) {
-                callback.onFailure("Network error: " + t.getMessage());
-            }
-        });
+        @Override
+        public void acceptAppointment(Long id, AppointmentCallback callback) {
+            apiService.acceptAppointment(id).enqueue(new Callback<AppointmentDTO>() {
+                @Override
+                public void onResponse(Call<AppointmentDTO> call, Response<AppointmentDTO> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body());
+                    } else {
+                        callback.onFailure("Failed to accept appointment: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AppointmentDTO> call, Throwable t) {
+                    callback.onFailure("Network error: " + t.getMessage());
+                }
+            });
+        }
+
+        @Override
+        public void rejectAppointment(Long id, VoidCallback callback) {
+            apiService.rejectAppointment(id).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onFailure("Failed to reject appointment: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    callback.onFailure("Network error: " + t.getMessage());
+                }
+            });
+        }
+
+        @Override
+        public void getDoctorAppointments(Long doctorId, AppointmentsListCallback callback) {
+            apiService.getDoctorAppointments(doctorId).enqueue(new Callback<List<AppointmentDTO>>() {
+                @Override
+                public void onResponse(Call<List<AppointmentDTO>> call, Response<List<AppointmentDTO>> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body());
+                    } else {
+                        callback.onFailure("Failed to get doctor appointments: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<AppointmentDTO>> call, Throwable t) {
+                    callback.onFailure("Network error: " + t.getMessage());
+                }
+            });
+        }
+
+        @Override
+        public void getPatientAppointments(Long patientId, AppointmentsListCallback callback) {
+            apiService.getPatientAppointments(patientId).enqueue(new Callback<List<AppointmentDTO>>() {
+                @Override
+                public void onResponse(Call<List<AppointmentDTO>> call, Response<List<AppointmentDTO>> response) {
+                    if (response.isSuccessful()) {
+                        callback.onSuccess(response.body());
+                    } else {
+                        callback.onFailure("Failed to get patient appointments: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<AppointmentDTO>> call, Throwable t) {
+                    callback.onFailure("Network error: " + t.getMessage());
+                }
+            });
+        }
     }
-}

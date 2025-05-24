@@ -34,4 +34,6 @@ public interface DoctorRepository {
     void createDoctorWithPicture(RequestBody doctorRequest, MultipartBody.Part picture, DoctorCallback callback);
 
     void createDoctorWithPictureBase64(DoctorRequestWithBase64 request, DoctorCallback callback);
+
+    void updateDoctorFcmToken(int doctorId, String token, VoidCallback callback);
 }

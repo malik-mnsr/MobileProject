@@ -9,7 +9,14 @@ import com.hai811i.mobileproject.dto.ReserveRequest;
 
 public interface AppointmentRepository {
     void reserveAppointment(Long slotId, ReserveRequest request, AppointmentCallback callback);
+
     void cancelAppointment(Long id, VoidCallback callback);
-    void getAppointmentsByDoctor(Long doctorId, AppointmentsListCallback callback);
-    void getAppointmentsByPatient(Long patientId, AppointmentsListCallback callback);
+
+    void acceptAppointment(Long id, AppointmentCallback callback);
+
+    void rejectAppointment(Long id, VoidCallback callback);
+
+    void getDoctorAppointments(Long doctorId, AppointmentsListCallback callback);
+
+    void getPatientAppointments(Long patientId, AppointmentsListCallback callback);
 }

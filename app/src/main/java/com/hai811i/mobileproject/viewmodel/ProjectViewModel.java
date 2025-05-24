@@ -4,10 +4,21 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.hai811i.mobileproject.callback.AppointmentCallback;
+import com.hai811i.mobileproject.callback.AppointmentsListCallback;
+import com.hai811i.mobileproject.callback.AuthUrlCallback;
+import com.hai811i.mobileproject.callback.MedicalRecordCallback;
+import com.hai811i.mobileproject.callback.MedicalRecordsListCallback;
+import com.hai811i.mobileproject.callback.OAuthCallback;
 import com.hai811i.mobileproject.callback.PatientCallback;
+import com.hai811i.mobileproject.callback.RawPatientCallback;
 import com.hai811i.mobileproject.callback.SlotCallback;
 import com.hai811i.mobileproject.callback.SlotsListCallback;
+import com.hai811i.mobileproject.dto.AppointmentDTO;
+import com.hai811i.mobileproject.dto.MedicalRecordDTO;
 import com.hai811i.mobileproject.dto.PatientDTO;
+import com.hai811i.mobileproject.dto.PatientRequestWithBase64;
+import com.hai811i.mobileproject.dto.ReserveRequest;
 import com.hai811i.mobileproject.dto.SlotCreateDTO;
 import com.hai811i.mobileproject.dto.SlotDTO;
 import com.hai811i.mobileproject.entity.AppointmentSlot;
@@ -16,6 +27,7 @@ import com.hai811i.mobileproject.callback.SlotAppointmentsCallback;
 import com.hai811i.mobileproject.entity.Patient;
 import com.hai811i.mobileproject.repository.AppointmentRepository;
 import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
+import com.hai811i.mobileproject.repository.MedicalRecordRepository;
 import com.hai811i.mobileproject.repository.PatientRepository;
 import com.hai811i.mobileproject.repository.SlotRepository;
 import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
@@ -40,23 +52,28 @@ public class ProjectViewModel extends ViewModel {
     private final GoogleCalendarRepository googleCalendarRepository;
     private final DoctorRepository doctorRepository;
     private final SlotRepository slotRepository;
-
-    // LiveData for login
+    private final MedicalRecordRepository medicalRecordRepository;
+    private final MutableLiveData<PatientDTO> createdPatient = new MutableLiveData<>();
+    private final MutableLiveData<String> authUrlLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> oauthResultLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+    private final MutableLiveData<MedicalRecordDTO> medicalRecord = new MutableLiveData<>();
+    private final MutableLiveData<List<MedicalRecordDTO>> medicalRecordsHistory = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> operationSuccess = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final MutableLiveData<AppointmentDTO> appointment = new MutableLiveData<>();
+    private final MutableLiveData<List<AppointmentDTO>> appointmentsList = new MutableLiveData<>();
     private final MutableLiveData<Boolean> operationCompleted = new MutableLiveData<>();
     private final MutableLiveData<String> operationError = new MutableLiveData<>();
     private final MutableLiveData<LoginResponse> loginResponse = new MutableLiveData<>();
     private final MutableLiveData<String> loginError = new MutableLiveData<>();
-
-    // LiveData for doctor operations
+    private final MutableLiveData<Boolean> fcmTokenUpdateSuccess = new MutableLiveData<>();
+    private final MutableLiveData<String> fcmTokenUpdateError = new MutableLiveData<>();
     private final MutableLiveData<Doctor> doctor = new MutableLiveData<>();
     private final MutableLiveData<String> doctorError = new MutableLiveData<>();
-
-    // LiveData for doctors list
     private final MutableLiveData<List<Doctor>> doctorsList = new MutableLiveData<>();
     private final MutableLiveData<String> doctorsListError = new MutableLiveData<>();
-
-    // LiveData for profile picture
     private final MutableLiveData<byte[]> profilePicture = new MutableLiveData<>();
     private final MutableLiveData<String> profilePictureError = new MutableLiveData<>();
 
@@ -65,12 +82,14 @@ public class ProjectViewModel extends ViewModel {
                             PatientRepository patientRepository,
                             SlotRepository slotRepository,
                             AppointmentRepository appointmentRepository,
-                            GoogleCalendarRepository googleCalendarRepository) {
+                            GoogleCalendarRepository googleCalendarRepository,
+                            MedicalRecordRepository medicalRecordRepository) {
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.slotRepository = slotRepository;
         this.appointmentRepository = appointmentRepository;
         this.googleCalendarRepository = googleCalendarRepository;
+        this.medicalRecordRepository=medicalRecordRepository;
     }
 
     // Login
@@ -275,10 +294,7 @@ public class ProjectViewModel extends ViewModel {
         });
     }
 
-    // Loading state
-    public LiveData<Boolean> getIsLoading() {
-        return isLoading;
-    }
+
 
     // Operation status
     public LiveData<Boolean> getOperationCompleted() {
@@ -289,11 +305,7 @@ public class ProjectViewModel extends ViewModel {
         return operationError;
     }
 
-    // Reset LiveData
-    public void resetOperationStatus() {
-        operationCompleted.setValue(false);
-        operationError.setValue(null);
-    }
+
 
     public void resetLoginStatus() {
         loginResponse.setValue(null);
@@ -375,7 +387,24 @@ public class ProjectViewModel extends ViewModel {
         });
     }
 
+    public void updateDoctorFcmToken(int doctorId, String token) {
+        isLoading.setValue(true);
+        doctorRepository.updateDoctorFcmToken(doctorId, token, new VoidCallback() {
+            @Override
+            public void onSuccess() {
+                isLoading.postValue(false);
+                fcmTokenUpdateSuccess.postValue(true);
+                operationCompleted.postValue(true);
+            }
 
+            @Override
+            public void onFailure(String errorMessage) {
+                isLoading.postValue(false);
+                fcmTokenUpdateError.postValue(errorMessage);
+                operationError.postValue(errorMessage);
+            }
+        });
+    }
 
 
     // LiveData getters
@@ -391,5 +420,358 @@ public class ProjectViewModel extends ViewModel {
         return slotError;
     }
 
+    public LiveData<Boolean> getFcmTokenUpdateSuccess() {
+        return fcmTokenUpdateSuccess;
+    }
 
+    public LiveData<String> getFcmTokenUpdateError() {
+        return fcmTokenUpdateError;
+    }
+    public void resetFcmTokenStatus() {
+        fcmTokenUpdateSuccess.setValue(false);
+        fcmTokenUpdateError.setValue(null);
+    }
+    public void reserveAppointment(Long slotId, ReserveRequest request) {
+        isLoading.setValue(true);
+        appointmentRepository.reserveAppointment(slotId, request, new AppointmentCallback() {
+            @Override
+            public void onSuccess(AppointmentDTO appointmentDTO) {
+                isLoading.postValue(false);
+                appointment.postValue(appointmentDTO);
+                operationSuccess.postValue(true);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    // Cancel appointment
+    public void cancelAppointment(Long id) {
+        isLoading.setValue(true);
+        appointmentRepository.cancelAppointment(id, new VoidCallback() {
+            @Override
+            public void onSuccess() {
+                isLoading.postValue(false);
+                operationSuccess.postValue(true);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    // Accept appointment
+    public void acceptAppointment(Long id) {
+        isLoading.setValue(true);
+        appointmentRepository.acceptAppointment(id, new AppointmentCallback() {
+            @Override
+            public void onSuccess(AppointmentDTO appointmentDTO) {
+                isLoading.postValue(false);
+                appointment.postValue(appointmentDTO);
+                operationSuccess.postValue(true);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    // Reject appointment
+    public void rejectAppointment(Long id) {
+        isLoading.setValue(true);
+        appointmentRepository.rejectAppointment(id, new VoidCallback() {
+            @Override
+            public void onSuccess() {
+                isLoading.postValue(false);
+                operationSuccess.postValue(true);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    // Get doctor's appointments
+    public void getDoctorAppointments(Long doctorId) {
+        isLoading.setValue(true);
+        appointmentRepository.getDoctorAppointments(doctorId, new AppointmentsListCallback() {
+            @Override
+            public void onSuccess(List<AppointmentDTO> appointments) {
+                isLoading.postValue(false);
+                appointmentsList.postValue(appointments);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    // Get patient's appointments
+    public void getPatientAppointments(Long patientId) {
+        isLoading.setValue(true);
+        appointmentRepository.getPatientAppointments(patientId, new AppointmentsListCallback() {
+            @Override
+            public void onSuccess(List<AppointmentDTO> appointments) {
+                isLoading.postValue(false);
+                appointmentsList.postValue(appointments);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    // LiveData Getters
+    public LiveData<AppointmentDTO> getAppointment() {
+        return appointment;
+    }
+
+    public LiveData<List<AppointmentDTO>> getAppointmentsList() {
+        return appointmentsList;
+    }
+
+
+    // Reset methods
+    public void resetOperationStatus() {
+        operationSuccess.setValue(false);
+        errorMessage.setValue(null);
+    }
+    public void createMedicalRecord(Long appointmentId, MedicalRecordDTO dto) {
+        isLoading.setValue(true);
+        medicalRecordRepository.createMedicalRecord(appointmentId, dto, new MedicalRecordCallback() {
+            @Override
+            public void onSuccess(MedicalRecordDTO record) {
+                isLoading.postValue(false);
+                medicalRecord.postValue(record);
+                operationSuccess.postValue(true);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    public void getMedicalRecordByAppointment(Long appointmentId) {
+        isLoading.setValue(true);
+        medicalRecordRepository.getMedicalRecordByAppointment(appointmentId, new MedicalRecordCallback() {
+            @Override
+            public void onSuccess(MedicalRecordDTO record) {
+                isLoading.postValue(false);
+                medicalRecord.postValue(record);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    public void updateMedicalRecord(Integer recordId, MedicalRecordDTO dto) {
+        isLoading.setValue(true);
+        medicalRecordRepository.updateMedicalRecord(recordId, dto, new MedicalRecordCallback() {
+            @Override
+            public void onSuccess(MedicalRecordDTO record) {
+                isLoading.postValue(false);
+                medicalRecord.postValue(record);
+                operationSuccess.postValue(true);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    public void getMedicalRecordsHistory(Long patientId) {
+        isLoading.setValue(true);
+        medicalRecordRepository.getMedicalRecordsHistory(patientId, new MedicalRecordsListCallback() {
+            @Override
+            public void onSuccess(List<MedicalRecordDTO> records) {
+                isLoading.postValue(false);
+                medicalRecordsHistory.postValue(records);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    public void getMedicalRecordById(Integer recordId) {
+        isLoading.setValue(true);
+        medicalRecordRepository.getMedicalRecordById(recordId, new MedicalRecordCallback() {
+            @Override
+            public void onSuccess(MedicalRecordDTO record) {
+                isLoading.postValue(false);
+                medicalRecord.postValue(record);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    public void deleteMedicalRecord(Integer recordId) {
+        isLoading.setValue(true);
+        medicalRecordRepository.deleteMedicalRecord(recordId, new VoidCallback() {
+            @Override
+            public void onSuccess() {
+                isLoading.postValue(false);
+                operationSuccess.postValue(true);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading.postValue(false);
+                errorMessage.postValue(message);
+            }
+        });
+    }
+
+    // LiveData Getters
+    public LiveData<MedicalRecordDTO> getMedicalRecord() {
+        return medicalRecord;
+    }
+
+    public LiveData<List<MedicalRecordDTO>> getMedicalRecordsHistory() {
+        return medicalRecordsHistory;
+    }
+
+    public LiveData<Boolean> getOperationSuccess() {
+        return operationSuccess;
+    }
+
+    public LiveData<String> getErrorMessage() {
+        return errorMessage;
+    }
+
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+
+
+
+    public void createPatientWithBase64(PatientRequestWithBase64 request) {
+        isLoading.setValue(true);
+        patientRepository.createPatientWithPictureBase64(request, new RawPatientCallback() {
+            @Override
+            public void onSuccess(Patient patient) {
+                isLoading.postValue(false);
+                base64CreatedPatient.postValue(patient);
+                operationCompleted.postValue(true);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                isLoading.postValue(false);
+                patientError.postValue(errorMessage);
+                operationError.postValue(errorMessage);
+            }
+        });
+    }
+    private final MutableLiveData<Patient> base64CreatedPatient = new MutableLiveData<>();
+    public LiveData<Patient> getBase64CreatedPatient() {
+        return base64CreatedPatient;
+    }
+
+    public void clearBase64CreatedPatient() {
+        base64CreatedPatient.setValue(null);
+    }
+    private MutableLiveData<Doctor> currentDoctor = new MutableLiveData<>();
+    private MutableLiveData<String> patientPhotoBase64 = new MutableLiveData<>("");
+
+    public void setCurrentDoctor(Doctor doctor) {
+        currentDoctor.setValue(doctor);
+    }
+
+    public MutableLiveData<Doctor> getCurrentDoctor() {
+        return currentDoctor;
+    }
+
+    public void setPatientPhotoBase64(String base64) {
+        patientPhotoBase64.setValue(base64);
+    }
+
+    public MutableLiveData<String> getPatientPhotoBase64() {
+        return patientPhotoBase64;
+    }
+    public LiveData<String> getAuthUrlLiveData() {
+        return authUrlLiveData;
+    }
+
+    public LiveData<String> getOauthResultLiveData() {
+        return oauthResultLiveData;
+    }
+
+    public LiveData<String> getErrorLiveData() {
+        return errorLiveData;
+    }
+
+    public void fetchGoogleAuthUrl(Long doctorId) {
+        googleCalendarRepository.getGoogleAuthUrl(doctorId, new AuthUrlCallback() {
+            @Override
+            public void onSuccess(String authUrl) {
+                authUrlLiveData.postValue(authUrl);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                errorLiveData.postValue(errorMessage);
+            }
+        });
+    }
+
+    public void handleOAuthCallback(String code, String state) {
+        googleCalendarRepository.handleGoogleOAuthCallback(code, state, new OAuthCallback() {
+            @Override
+            public void onSuccess(String resultMessage) {
+                oauthResultLiveData.postValue(resultMessage);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                errorLiveData.postValue(errorMessage);
+            }
+        });
+    }
+    public LiveData<PatientDTO> getCreatedPatient() {
+        return createdPatient;
+    }
+    public void clearCreatedPatient() {
+        createdPatient.setValue(null);
+    }
 }
+
+

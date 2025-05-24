@@ -159,3 +159,13 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>
+
+
+<!-- <com.google.android.gms.common.SignInButton
+                android:id="@+id/google_sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@android:color/white"
+                app:buttonSize="wide"
+                app:colorScheme="dark"/> -->

@@ -1,6 +1,8 @@
 package com.hai811i.mobileproject.api;
 
+import com.hai811i.mobileproject.dto.MedicalRecordDTO;
 import com.hai811i.mobileproject.dto.PatientDTO;
+import com.hai811i.mobileproject.dto.PatientRequestWithBase64;
 import com.hai811i.mobileproject.dto.SlotCreateDTO;
 import com.hai811i.mobileproject.dto.SlotDTO;
 import com.hai811i.mobileproject.dto.AppointmentDTO;
@@ -13,6 +15,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 
@@ -26,6 +29,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 import java.util.List;
+import java.util.Map;
 
 
 import com.hai811i.mobileproject.entity.Patient;
@@ -74,8 +78,15 @@ public interface ApiService {
             @Part MultipartBody.Part picture);
 
     @POST("/api/doctors/create-doctor/with-picture-base64")
+    @Headers("Content-Type: application/json")
     Call<Doctor> createDoctorWithPictureBase64(@Body DoctorRequestWithBase64 request);
 
+
+    @POST("/api/doctors/{doctorId}/fcm/token")
+    Call<Void> updateDoctorFcmToken(
+            @Path("doctorId") long doctorId,
+            @Body Map<String, String> tokenRequest
+    );
     /* ======================= PATIENT ENDPOINTS ======================= */
 
     @POST("/api/patients/doctor/{doctorId}")
@@ -109,22 +120,37 @@ public interface ApiService {
     @GET("/api/patients/{id}/profile-picture")
     Call<ResponseBody> getPatientProfilePicture(@Path("id") Long id);
 
+
+    @POST("/api/patients/create-patient/with-picture-base64")
+    @Headers("Content-Type: application/json")
+    Call<Patient> createPatientWithPictureBase64(@Body PatientRequestWithBase64 request);
     /* ======================= APPOINTMENT ENDPOINTS ======================= */
 
+    // 1. Reserve an appointment
     @POST("/api/appointments/reserve/{slotId}")
     Call<AppointmentDTO> reserveAppointment(
             @Path("slotId") Long slotId,
             @Body ReserveRequest request);
 
+    // 2. Cancel an appointment
     @DELETE("/api/appointments/{id}")
     Call<Void> cancelAppointment(@Path("id") Long id);
 
+    // 3a. Accept pending appointment
+    @POST("/api/appointments/{id}/accept")
+    Call<AppointmentDTO> acceptAppointment(@Path("id") Long id);
+
+    // 3b. Reject pending appointment
+    @POST("/api/appointments/{id}/reject")
+    Call<Void> rejectAppointment(@Path("id") Long id);
+
+    // 4a. List doctor's appointments
     @GET("/api/appointments/doctor/{doctorId}")
-    Call<List<AppointmentDTO>> getAppointmentsByDoctor(@Path("doctorId") Long doctorId);
+    Call<List<AppointmentDTO>> getDoctorAppointments(@Path("doctorId") Long doctorId);
 
+    // 4b. List patient's appointments
     @GET("/api/appointments/patient/{patientId}")
-    Call<List<AppointmentDTO>> getAppointmentsByPatient(@Path("patientId") Long patientId);
-
+    Call<List<AppointmentDTO>> getPatientAppointments(@Path("patientId") Long patientId);
     /* ======================= SLOT ENDPOINTS ======================= */
 
     @POST("/api/slots/doctor/{doctorId}")
@@ -146,4 +172,35 @@ public interface ApiService {
     Call<String> handleGoogleOAuthCallback(
             @Query("code") String code,
             @Query("state") String state);
+
+    @POST("/api/records/appointment/{appointmentId}")
+    Call<MedicalRecordDTO> createMedicalRecord(
+            @Path("appointmentId") Long appointmentId,
+            @Body MedicalRecordDTO dto);
+
+    // Get record by appointment
+    @GET("/api/records/appointment/{appointmentId}")
+    Call<MedicalRecordDTO> getMedicalRecordByAppointment(
+            @Path("appointmentId") Long appointmentId);
+
+    // Update record
+    @PUT("/api/records/{recordId}")
+    Call<MedicalRecordDTO> updateMedicalRecord(
+            @Path("recordId") Integer recordId,
+            @Body MedicalRecordDTO dto);
+
+    // Get patient history
+    @GET("/api/records/patient/{patientId}/history")
+    Call<List<MedicalRecordDTO>> getMedicalRecordsHistory(
+            @Path("patientId") Long patientId);
+
+    // Get record by ID
+    @GET("/api/records/{recordId}")
+    Call<MedicalRecordDTO> getMedicalRecordById(
+            @Path("recordId") Integer recordId);
+
+    // Delete record
+    @DELETE("/api/records/{recordId}")
+    Call<Void> deleteMedicalRecord(
+            @Path("recordId") Integer recordId);
 }

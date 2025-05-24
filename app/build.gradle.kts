@@ -47,9 +47,12 @@ dependencies {
         androidTestImplementation(libs.espresso.core)
         implementation(libs.jackson.databind)
         implementation(libs.jackson.jsr310)
+        implementation(libs.gms.location)
         implementation(platform(libs.firebase.bom))
         implementation(libs.play.services.auth)
         implementation("com.google.firebase:firebase-analytics")
+        implementation(libs.room.runtime)
+        annotationProcessor(libs.room.compiler) // For Java
     }
 
 }
