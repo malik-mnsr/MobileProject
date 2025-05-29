@@ -52,7 +52,10 @@ dependencies {
         implementation(libs.play.services.auth)
         implementation("com.google.firebase:firebase-analytics")
         implementation(libs.room.runtime)
-        annotationProcessor(libs.room.compiler) // For Java
+        annotationProcessor(libs.room.compiler)
+        implementation("com.squareup.okhttp3:okhttp:4.11.0")
+        implementation("androidx.recyclerview:recyclerview:1.3.2")
     }
+
 
 }

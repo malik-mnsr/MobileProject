@@ -35,7 +35,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static Retrofit retrofit;
-    private static final String BASE_URL = "http://192.168.224.33:8080/";
+    private static final String BASE_URL = "http://10.0.2.2:8080/";
+
 
     // Custom adapter for LocalDateTime
     private static class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {

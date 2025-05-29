@@ -2,24 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="8dp">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="start"
-        android:background="@drawable/ic_default_profile"
-        android:padding="12dp">
-
-        <TextView
-            android:id="@+id/messageText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            tools:text="This is a sample message"/>
-    </LinearLayout>
+        android:padding="12dp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bubble_user"/>
 
 </LinearLayout>
