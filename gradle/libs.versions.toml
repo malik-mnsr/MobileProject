@@ -18,6 +18,9 @@ firebase-bom = "32.7.0"  # Example Firebase BOM version
 play-services-auth = "20.7.0"  # Example Play Services Auth version
 room = "2.6.1"
 gms-location = "21.0.1"
+androidx-browser = "1.6.0"
+firebaseMessaging = "24.1.1"
+
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -39,6 +42,9 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidx-browser" }
+converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services-gradle" }

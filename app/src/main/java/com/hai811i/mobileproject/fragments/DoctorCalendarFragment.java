@@ -2,8 +2,11 @@ package com.hai811i.mobileproject.fragments;
 
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,6 +20,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -59,7 +63,7 @@ public class DoctorCalendarFragment extends Fragment {
     private Long currentDoctorId;
     private int selectedDay = -1;
     private List<SlotCreateDTO> slotsToCreate = new ArrayList<>();
-
+    private Button btnConnectGoogleCalendar;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +90,7 @@ public class DoctorCalendarFragment extends Fragment {
                         medicalRecordRepository
                 )
         ).get(ProjectViewModel.class);
+
     }
 
     @Override
@@ -124,10 +129,19 @@ public class DoctorCalendarFragment extends Fragment {
         // Save slots button
         btnSaveSlots.setOnClickListener(v -> saveTimeSlots());
 
-        // Observe ViewModel
+        btnConnectGoogleCalendar = view.findViewById(R.id.btn_connect_google_calendar);
+        btnConnectGoogleCalendar.setOnClickListener(v -> connectGoogleCalendar());
+
         observeViewModel();
 
         return view;
+    }
+    private void connectGoogleCalendar() {
+        if (currentDoctorId == -1) {
+            Toast.makeText(getContext(), "Doctor not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        viewModel.fetchGoogleAuthUrl(currentDoctorId);
     }
 
     private void updateMonthYear() {
@@ -416,6 +430,44 @@ public class DoctorCalendarFragment extends Fragment {
             btnAddTimeSlot.setEnabled(!isLoading);
             btnSaveSlots.setEnabled(!isLoading);
         });
+        viewModel.getGoogleAuthUrl().observe(getViewLifecycleOwner(), url -> {
+            if (url != null) {
+                openAuthUrl(url);
+            }
+        });
+        viewModel.getGoogleOAuthResult().observe(getViewLifecycleOwner(), result -> {
+            if (result != null) {
+                Toast.makeText(getContext(), "Google Calendar connected successfully", Toast.LENGTH_SHORT).show();
+                btnConnectGoogleCalendar.setVisibility(View.GONE);
+            }
+        });
+        viewModel.getGoogleCalendarConnectionStatus().observe(getViewLifecycleOwner(), isConnected -> {
+            if (isConnected != null) {
+                btnConnectGoogleCalendar.setVisibility(isConnected ? View.GONE : View.VISIBLE);
+            }
+        });
+        viewModel.getGoogleCalendarError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Log.e("GoogleCalendar", "Google Calendar error: " + error);
+                Toast.makeText(getContext(), "Google Calendar error: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+    public void handleOAuthCallback(String code, String state) {
+        viewModel.handleOAuthCallback(code, state);
+    }
+    // Add this method to handle the auth URL
+    private void openAuthUrl(String url) {
+        try {
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.intent.setPackage("com.android.chrome"); // Force Chrome
+            customTabsIntent.launchUrl(requireContext(), Uri.parse(url));
+        } catch (ActivityNotFoundException e) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        }
     }
 
 }

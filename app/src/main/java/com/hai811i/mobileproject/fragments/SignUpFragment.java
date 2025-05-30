@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hai811i.mobileproject.ChoixActivity;
 import com.hai811i.mobileproject.DoctorActivity;
 import com.hai811i.mobileproject.R;
@@ -216,9 +217,18 @@ public class SignUpFragment extends Fragment {
         signUpButton.setEnabled(false);
         signUpButton.setText("Creating account...");
 
-
+        // 🔥 Fetch FCM token before sending request
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        String fcmToken = task.getResult();
+                        request.setFcmToken(fcmToken); // ✅ Attach token to request
+                    } else {
+                        request.setFcmToken(null); // fallback (optional)
+                    }
         signUpViewModel.createDoctorWithPictureBase64(request);
 
+                });
     }
 
     @Override

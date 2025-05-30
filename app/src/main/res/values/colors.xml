@@ -16,4 +16,9 @@
     <color name="transparent">#00000000</color>
     <color name="SaltGray">#EEEEEE</color>
     <color name="red">#FF0000</color>
+    <color name="GoogleBlue">#4285F4</color>
+    <color name="GoogleRed">#EA4335</color>
+    <color name="GoogleYellow">#FBBC05</color>
+    <color name="GoogleGreen">#34A853</color>
+    <color name="gray">#808080</color>
 </resources>

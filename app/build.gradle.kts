@@ -34,6 +34,7 @@ android {
 
 dependencies {
 
+    implementation(libs.firebase.messaging)
     dependencies {
         implementation(libs.appcompat)
         implementation(libs.material)
@@ -49,10 +50,12 @@ dependencies {
         implementation(libs.jackson.jsr310)
         implementation(libs.gms.location)
         implementation(platform(libs.firebase.bom))
+        implementation(libs.androidx.browser)
         implementation(libs.play.services.auth)
         implementation("com.google.firebase:firebase-analytics")
         implementation(libs.room.runtime)
         annotationProcessor(libs.room.compiler)
+        implementation(libs.converter.scalars)
         implementation("com.squareup.okhttp3:okhttp:4.11.0")
         implementation("androidx.recyclerview:recyclerview:1.3.2")
     }

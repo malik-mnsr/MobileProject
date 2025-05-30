@@ -18,10 +18,8 @@ public class DoctorRequestWithBase64 {
     private String specialty;
     private String phone;
     private WorkingMode currentMode;
-
-
     private String profilePictureBase64;
-
+    private String fcmToken; // <-- Add this
     private transient List<PatientRequest> patients;   // sous‑DTO défini plus bas
 
 
@@ -90,6 +88,14 @@ public class DoctorRequestWithBase64 {
 
     public void setProfilePictureBase64(String profilePictureBase64) {
         this.profilePictureBase64 = profilePictureBase64;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     public List<PatientRequest> getPatients() {

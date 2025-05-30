@@ -1,58 +1,59 @@
 package com.hai811i.mobileproject.entity;
 
-
-import java.time.LocalDate;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Prescription {
 
-    private Integer prescriptionId;
-    private MedicalRecord record;
-    private String medications;  // JSON list of {name, dosage, frequency}
-    private Integer validityDays = 30;
-    private PrescriptionStatus status = PrescriptionStatus.ACTIVE;
-    private boolean sentToPharmacy = false;
-    private String pharmacyDetails;
-    private LocalDate dateIssued = LocalDate.now();
+    private Long id;
+    private MedicalRecord medicalRecord;
+    private String note;
+    private List<com.example.mobileproject.entity.MedicationLine> medications = new ArrayList<>();
+    private Instant dateCreated = Instant.now();
 
+    // No-arg constructor
     public Prescription() {}
-
-    public Prescription(Integer prescriptionId, MedicalRecord record, String medications,
-                        Integer validityDays, PrescriptionStatus status,
-                        boolean sentToPharmacy, String pharmacyDetails,
-                        LocalDate dateIssued) {
-        this.prescriptionId = prescriptionId;
-        this.record = record;
-        this.medications = medications;
-        this.validityDays = validityDays != null ? validityDays : 30;
-        this.status = status != null ? status : PrescriptionStatus.ACTIVE;
-        this.sentToPharmacy = sentToPharmacy;
-        this.pharmacyDetails = pharmacyDetails;
-        this.dateIssued = dateIssued != null ? dateIssued : LocalDate.now();
-    }
 
     // Getters and Setters
 
-    public Integer getPrescriptionId() { return prescriptionId; }
-    public void setPrescriptionId(Integer prescriptionId) { this.prescriptionId = prescriptionId; }
+    public Long getId() {
+        return id;
+    }
 
-    public MedicalRecord getRecord() { return record; }
-    public void setRecord(MedicalRecord record) { this.record = record; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getMedications() { return medications; }
-    public void setMedications(String medications) { this.medications = medications; }
+    public MedicalRecord getMedicalRecord() {
+        return medicalRecord;
+    }
 
-    public Integer getValidityDays() { return validityDays; }
-    public void setValidityDays(Integer validityDays) { this.validityDays = validityDays; }
+    public void setMedicalRecord(MedicalRecord medicalRecord) {
+        this.medicalRecord = medicalRecord;
+    }
 
-    public PrescriptionStatus getStatus() { return status; }
-    public void setStatus(PrescriptionStatus status) { this.status = status; }
+    public String getNote() {
+        return note;
+    }
 
-    public boolean isSentToPharmacy() { return sentToPharmacy; }
-    public void setSentToPharmacy(boolean sentToPharmacy) { this.sentToPharmacy = sentToPharmacy; }
+    public void setNote(String note) {
+        this.note = note;
+    }
 
-    public String getPharmacyDetails() { return pharmacyDetails; }
-    public void setPharmacyDetails(String pharmacyDetails) { this.pharmacyDetails = pharmacyDetails; }
+    public List<com.example.mobileproject.entity.MedicationLine> getMedications() {
+        return medications;
+    }
 
-    public LocalDate getDateIssued() { return dateIssued; }
-    public void setDateIssued(LocalDate dateIssued) { this.dateIssued = dateIssued; }
+    public void setMedications(List<com.example.mobileproject.entity.MedicationLine> medications) {
+        this.medications = medications;
+    }
+
+    public Instant getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Instant dateCreated) {
+        this.dateCreated = dateCreated;
+    }
 }

@@ -8,6 +8,7 @@ import com.hai811i.mobileproject.dto.SlotDTO;
 import com.hai811i.mobileproject.dto.AppointmentDTO;
 import com.hai811i.mobileproject.dto.ReserveRequest;
 
+import com.hai811i.mobileproject.entity.WorkingMode;
 import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
 import com.hai811i.mobileproject.entity.Doctor;
 
@@ -56,9 +57,18 @@ public interface ApiService {
     @DELETE("/api/doctors/{id}")
     Call<Void> deleteDoctor(@Path("id") long id);
 
-    // Doctor Authentication
     @POST("/api/doctors/login")
-    Call<Doctor> loginDoctor(@Query("email") String email, @Query("phone") String phone);
+    Call<Doctor> loginDoctor(
+            @Query("email") String email,
+            @Query("phone") String phone,
+            @Query("fcmToken") String fcmToken  // Add this
+    );
+    // Add these new endpoints
+    @GET("/api/doctors/{id}/mode")
+    Call<WorkingMode> getDoctorMode(@Path("id") long doctorId);
+
+    @PUT("/api/doctors/{id}/mode")
+    Call<Void> updateDoctorMode(@Path("id") long doctorId, @Body WorkingMode newMode);
 
     // Profile Picture
     @Multipart
@@ -81,12 +91,12 @@ public interface ApiService {
     @Headers("Content-Type: application/json")
     Call<Doctor> createDoctorWithPictureBase64(@Body DoctorRequestWithBase64 request);
 
-
     @POST("/api/doctors/{doctorId}/fcm/token")
     Call<Void> updateDoctorFcmToken(
             @Path("doctorId") long doctorId,
             @Body Map<String, String> tokenRequest
     );
+
     /* ======================= PATIENT ENDPOINTS ======================= */
 
     @POST("/api/patients/doctor/{doctorId}")
@@ -165,6 +175,8 @@ public interface ApiService {
 
     /* ======================= GOOGLE CALENDAR ENDPOINTS ======================= */
 
+    /* ======================= GOOGLE CALENDAR ENDPOINTS ======================= */
+
     @GET("/google/auth-url/{doctorId}")
     Call<String> getGoogleAuthUrl(@Path("doctorId") Long doctorId);
 
@@ -173,34 +185,46 @@ public interface ApiService {
             @Query("code") String code,
             @Query("state") String state);
 
+    // Add appointment to Google Calendar
+    @POST("/appointments/{appointmentId}/google-calendar")
+    Call<String> addAppointmentToGoogleCalendar(@Path("appointmentId") Long appointmentId);
+
+    // Remove appointment from Google Calendar
+    @DELETE("/appointments/{appointmentId}/google-calendar/{eventId}")
+    Call<Void> removeAppointmentFromGoogleCalendar(
+            @Path("appointmentId") Long appointmentId,
+            @Path("eventId") String eventId);
+
+    // Check if doctor has Google Calendar connected
+    @GET("/doctors/{doctorId}/google-calendar/status")
+    Call<Boolean> checkGoogleCalendarConnection(@Path("doctorId") Long doctorId);
+
+    /* ======================= MEDICAL RECORDS ENDPOINTS ======================= */
+
     @POST("/api/records/appointment/{appointmentId}")
     Call<MedicalRecordDTO> createMedicalRecord(
             @Path("appointmentId") Long appointmentId,
             @Body MedicalRecordDTO dto);
 
-    // Get record by appointment
     @GET("/api/records/appointment/{appointmentId}")
     Call<MedicalRecordDTO> getMedicalRecordByAppointment(
             @Path("appointmentId") Long appointmentId);
 
-    // Update record
     @PUT("/api/records/{recordId}")
     Call<MedicalRecordDTO> updateMedicalRecord(
             @Path("recordId") Integer recordId,
             @Body MedicalRecordDTO dto);
 
-    // Get patient history
     @GET("/api/records/patient/{patientId}/history")
     Call<List<MedicalRecordDTO>> getMedicalRecordsHistory(
             @Path("patientId") Long patientId);
 
-    // Get record by ID
     @GET("/api/records/{recordId}")
     Call<MedicalRecordDTO> getMedicalRecordById(
             @Path("recordId") Integer recordId);
 
-    // Delete record
     @DELETE("/api/records/{recordId}")
     Call<Void> deleteMedicalRecord(
             @Path("recordId") Integer recordId);
+
 }

@@ -7,5 +7,6 @@ public enum WorkingMode implements Serializable {
     CONSULTATION,    // en consultation
     HOME_VISIT,      // visite à domicile
     DND,             // “Do Not Disturb” / Ne pas déranger
-    ABSENT           // absent
+    EMERGENCY,
+    ABSENT//       // absent
 }

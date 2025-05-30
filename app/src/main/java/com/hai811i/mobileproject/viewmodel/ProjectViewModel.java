@@ -7,11 +7,15 @@ import androidx.lifecycle.ViewModel;
 import com.hai811i.mobileproject.callback.AppointmentCallback;
 import com.hai811i.mobileproject.callback.AppointmentsListCallback;
 import com.hai811i.mobileproject.callback.AuthUrlCallback;
+import com.hai811i.mobileproject.callback.CalendarEventCallback;
+import com.hai811i.mobileproject.callback.CalendarStatusCallback;
 import com.hai811i.mobileproject.callback.MedicalRecordCallback;
 import com.hai811i.mobileproject.callback.MedicalRecordsListCallback;
+import com.hai811i.mobileproject.callback.ModeCallback;
 import com.hai811i.mobileproject.callback.OAuthCallback;
 import com.hai811i.mobileproject.callback.PatientCallback;
 import com.hai811i.mobileproject.callback.RawPatientCallback;
+import com.hai811i.mobileproject.callback.SimpleCallback;
 import com.hai811i.mobileproject.callback.SlotCallback;
 import com.hai811i.mobileproject.callback.SlotsListCallback;
 import com.hai811i.mobileproject.dto.AppointmentDTO;
@@ -25,6 +29,7 @@ import com.hai811i.mobileproject.entity.AppointmentSlot;
 import com.hai811i.mobileproject.callback.SlotAppointmentCallback;
 import com.hai811i.mobileproject.callback.SlotAppointmentsCallback;
 import com.hai811i.mobileproject.entity.Patient;
+import com.hai811i.mobileproject.entity.WorkingMode;
 import com.hai811i.mobileproject.repository.AppointmentRepository;
 import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
 import com.hai811i.mobileproject.repository.MedicalRecordRepository;
@@ -76,8 +81,18 @@ public class ProjectViewModel extends ViewModel {
     private final MutableLiveData<String> doctorsListError = new MutableLiveData<>();
     private final MutableLiveData<byte[]> profilePicture = new MutableLiveData<>();
     private final MutableLiveData<String> profilePictureError = new MutableLiveData<>();
-
-
+    private final MutableLiveData<WorkingMode> currentMode = new MutableLiveData<>();
+    private final MutableLiveData<String> authUrl = new MutableLiveData<>();
+    private final MutableLiveData<String> oAuthResult = new MutableLiveData<>();
+    private final MutableLiveData<String> calendarEventResult = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> calendarConnectionStatus = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> updateSuccess = new MutableLiveData<>(false);
+    // New LiveData for Google Calendar
+    private final MutableLiveData<String> googleAuthUrl = new MutableLiveData<>();
+    private final MutableLiveData<String> googleOAuthResult = new MutableLiveData<>();
+    private final MutableLiveData<String> googleCalendarEventResult = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> googleCalendarConnectionStatus = new MutableLiveData<>();
+    private final MutableLiveData<String> googleCalendarError = new MutableLiveData<>();
     public ProjectViewModel(DoctorRepository doctorRepository,
                             PatientRepository patientRepository,
                             SlotRepository slotRepository,
@@ -89,7 +104,7 @@ public class ProjectViewModel extends ViewModel {
         this.slotRepository = slotRepository;
         this.appointmentRepository = appointmentRepository;
         this.googleCalendarRepository = googleCalendarRepository;
-        this.medicalRecordRepository=medicalRecordRepository;
+        this.medicalRecordRepository = medicalRecordRepository;
     }
 
     // Login
@@ -295,7 +310,6 @@ public class ProjectViewModel extends ViewModel {
     }
 
 
-
     // Operation status
     public LiveData<Boolean> getOperationCompleted() {
         return operationCompleted;
@@ -304,7 +318,6 @@ public class ProjectViewModel extends ViewModel {
     public LiveData<String> getOperationError() {
         return operationError;
     }
-
 
 
     public void resetLoginStatus() {
@@ -427,10 +440,12 @@ public class ProjectViewModel extends ViewModel {
     public LiveData<String> getFcmTokenUpdateError() {
         return fcmTokenUpdateError;
     }
+
     public void resetFcmTokenStatus() {
         fcmTokenUpdateSuccess.setValue(false);
         fcmTokenUpdateError.setValue(null);
     }
+
     public void reserveAppointment(Long slotId, ReserveRequest request) {
         isLoading.setValue(true);
         appointmentRepository.reserveAppointment(slotId, request, new AppointmentCallback() {
@@ -555,6 +570,7 @@ public class ProjectViewModel extends ViewModel {
         operationSuccess.setValue(false);
         errorMessage.setValue(null);
     }
+
     public void createMedicalRecord(Long appointmentId, MedicalRecordDTO dto) {
         isLoading.setValue(true);
         medicalRecordRepository.createMedicalRecord(appointmentId, dto, new MedicalRecordCallback() {
@@ -681,8 +697,6 @@ public class ProjectViewModel extends ViewModel {
     }
 
 
-
-
     public void createPatientWithBase64(PatientRequestWithBase64 request) {
         isLoading.setValue(true);
         patientRepository.createPatientWithPictureBase64(request, new RawPatientCallback() {
@@ -701,7 +715,9 @@ public class ProjectViewModel extends ViewModel {
             }
         });
     }
+
     private final MutableLiveData<Patient> base64CreatedPatient = new MutableLiveData<>();
+
     public LiveData<Patient> getBase64CreatedPatient() {
         return base64CreatedPatient;
     }
@@ -709,6 +725,7 @@ public class ProjectViewModel extends ViewModel {
     public void clearBase64CreatedPatient() {
         base64CreatedPatient.setValue(null);
     }
+
     private MutableLiveData<Doctor> currentDoctor = new MutableLiveData<>();
     private MutableLiveData<String> patientPhotoBase64 = new MutableLiveData<>("");
 
@@ -727,6 +744,7 @@ public class ProjectViewModel extends ViewModel {
     public MutableLiveData<String> getPatientPhotoBase64() {
         return patientPhotoBase64;
     }
+
     public LiveData<String> getAuthUrlLiveData() {
         return authUrlLiveData;
     }
@@ -739,39 +757,140 @@ public class ProjectViewModel extends ViewModel {
         return errorLiveData;
     }
 
-    public void fetchGoogleAuthUrl(Long doctorId) {
-        googleCalendarRepository.getGoogleAuthUrl(doctorId, new AuthUrlCallback() {
+
+    public void fetchDoctorMode(long doctorId) {
+        isLoading.setValue(true);
+        doctorRepository.getDoctorMode(doctorId, new ModeCallback() {
             @Override
-            public void onSuccess(String authUrl) {
-                authUrlLiveData.postValue(authUrl);
+            public void onSuccess(WorkingMode mode) {
+                isLoading.postValue(false);
+                currentMode.postValue(mode);
             }
 
             @Override
-            public void onFailure(String errorMessage) {
-                errorLiveData.postValue(errorMessage);
+            public void onFailure(Throwable error) {
+                isLoading.postValue(false);
+                errorMessage.postValue(error.getMessage());
+            }
+        });
+    }
+
+    public void updateDoctorMode(long doctorId, WorkingMode newMode) {
+        isLoading.setValue(true);
+        doctorRepository.updateDoctorMode(doctorId, newMode, new SimpleCallback() {
+            @Override
+            public void onSuccess() {
+                isLoading.postValue(false);
+                updateSuccess.postValue(true);
+                currentMode.postValue(newMode); // Update the local mode
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                isLoading.postValue(false);
+                errorMessage.postValue(error.getMessage());
+                updateSuccess.postValue(false);
+            }
+        });
+    }
+
+    public LiveData<PatientDTO> getCreatedPatient() {
+        return createdPatient;
+    }
+
+    public void clearCreatedPatient() {
+        createdPatient.setValue(null);
+    }
+
+    public LiveData<WorkingMode> getCurrentMode() {
+        return currentMode;
+    }
+
+
+    // Loading LiveData
+    public LiveData<Boolean> isLoading() {
+        return isLoading;
+    }
+
+    // Update success LiveData
+    public LiveData<Boolean> isUpdateSuccess() {
+        return updateSuccess;
+    }
+
+    // New Google Calendar methods
+    public void fetchGoogleAuthUrl(Long doctorId) {
+        isLoading.postValue(true);
+        googleCalendarRepository.getGoogleAuthUrl(doctorId, new AuthUrlCallback() {
+            @Override
+            public void onSuccess(String url) {
+                isLoading.postValue(false);
+                googleAuthUrl.postValue(url);
+            }
+
+            @Override
+            public void onFailure(String error) {
+                isLoading.postValue(false);
+                googleCalendarError.postValue(error);
             }
         });
     }
 
     public void handleOAuthCallback(String code, String state) {
+        isLoading.postValue(true);
         googleCalendarRepository.handleGoogleOAuthCallback(code, state, new OAuthCallback() {
             @Override
-            public void onSuccess(String resultMessage) {
-                oauthResultLiveData.postValue(resultMessage);
+            public void onSuccess(String result) {
+                isLoading.postValue(false);
+                googleOAuthResult.postValue(result);
+                checkGoogleCalendarConnection(Long.valueOf(state)); // state contains doctorId
             }
 
             @Override
-            public void onFailure(String errorMessage) {
-                errorLiveData.postValue(errorMessage);
+            public void onFailure(String error) {
+                isLoading.postValue(false);
+                googleCalendarError.postValue(error);
             }
         });
     }
-    public LiveData<PatientDTO> getCreatedPatient() {
-        return createdPatient;
-    }
-    public void clearCreatedPatient() {
-        createdPatient.setValue(null);
-    }
-}
 
+    public void checkGoogleCalendarConnection(Long doctorId) {
+        isLoading.postValue(true);
+        googleCalendarRepository.checkCalendarConnection(doctorId, new CalendarStatusCallback() {
+            @Override
+            public void onSuccess(boolean isConnected) {
+                isLoading.postValue(false);
+                googleCalendarConnectionStatus.postValue(isConnected);
+            }
+
+            @Override
+            public void onFailure(String error) {
+                isLoading.postValue(false);
+                googleCalendarError.postValue(error);
+            }
+        });
+    }
+
+    public void addAppointmentToCalendar(Long appointmentId) {
+        isLoading.postValue(true);
+        googleCalendarRepository.addAppointmentToCalendar(appointmentId, new CalendarEventCallback() {
+            @Override
+            public void onSuccess(String eventId) {
+                isLoading.postValue(false);
+                googleCalendarEventResult.postValue(eventId);
+            }
+
+            @Override
+            public void onFailure(String error) {
+                isLoading.postValue(false);
+                googleCalendarError.postValue(error);
+            }
+        });
+    }
+    // New LiveData getters for Google Calendar
+    public LiveData<String> getGoogleAuthUrl() { return googleAuthUrl; }
+    public LiveData<String> getGoogleOAuthResult() { return googleOAuthResult; }
+    public LiveData<String> getGoogleCalendarEventResult() { return googleCalendarEventResult; }
+    public LiveData<Boolean> getGoogleCalendarConnectionStatus() { return googleCalendarConnectionStatus; }
+    public LiveData<String> getGoogleCalendarError() { return googleCalendarError; }
+}
 
