@@ -52,7 +52,7 @@ public class AssistantFragment extends Fragment {
 
 
     private static final String TAG = "AssistantFragment";
-    private static final String OPENAI_API_KEY = "KEY API ";   // <— remplace par la clé
+    private static final String OPENAI_API_KEY = "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";   // <— remplace par la clé
     private static final MediaType JSON = MediaType.get("application/json");
     private static final MediaType AUDIO = MediaType.get("audio/m4a");
 
@@ -180,8 +180,10 @@ public class AssistantFragment extends Fragment {
 
         Request r = new Request.Builder()
                 .url("https://api.openai.com/v1/audio/transcriptions")
-                .addHeader("Authorization", OPENAI_API_KEY)
-                .post(req).build();
+                .addHeader("Authorization", "Bearer " + OPENAI_API_KEY)  // ✅ FIX
+                .post(req)
+                .build();
+
 
         try (Response resp = http.newCall(r).execute()) {
             if (!resp.isSuccessful()) throw new IOException("Whisper "+resp.code());
@@ -196,7 +198,7 @@ public class AssistantFragment extends Fragment {
 
         Request r = new Request.Builder()
                 .url("https://api.openai.com/v1/chat/completions")
-                .addHeader("Authorization", OPENAI_API_KEY)
+                .addHeader("Authorization", "Bearer " + OPENAI_API_KEY)  // ✅ FIX
                 .post(RequestBody.create(payload.toString(), JSON))
                 .build();
 

@@ -36,7 +36,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitClient {
     private static Retrofit retrofit;
-    private static final String BASE_URL = "http://192.168.200.33:8080/";
+    private static final String BASE_URL = "http://192.168.200.33:8081/";
 
 
     // Custom adapter for LocalDateTime

@@ -41,10 +41,9 @@ public class DndFragment extends Fragment {
         // Get notification manager
         notificationManager = (NotificationManager) requireActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Set up DND toggle
         dndToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                isDoNotDisturbEnabled();
+                enableDoNotDisturb();  // Changed from isDoNotDisturbEnabled()
             } else {
                 disableDoNotDisturb();
             }
@@ -224,6 +223,7 @@ public class DndFragment extends Fragment {
             NotificationManager.Policy policy = notificationManager.getNotificationPolicy();
             return policy != null &&
                     (policy.priorityCategories & NotificationManager.Policy.PRIORITY_CATEGORY_ALARMS) != 0 &&
+                    (policy.priorityCategories & NotificationManager.Policy.PRIORITY_CATEGORY_REMINDERS) == 0 &&
                     (policy.priorityCategories & NotificationManager.Policy.PRIORITY_CATEGORY_REMINDERS) == 0 &&
                     (policy.priorityCategories & NotificationManager.Policy.PRIORITY_CATEGORY_EVENTS) == 0 &&
                     (policy.priorityCategories & NotificationManager.Policy.PRIORITY_CATEGORY_MESSAGES) == 0 &&
