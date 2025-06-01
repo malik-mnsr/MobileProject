@@ -52,7 +52,7 @@ public class AssistantFragment extends Fragment {
 
 
     private static final String TAG = "AssistantFragment";
-    private static final String OPENAI_API_KEY = "";   // <— remplace par la clé
+       // <— remplace par la clé
     private static final MediaType JSON = MediaType.get("application/json");
     private static final MediaType AUDIO = MediaType.get("audio/m4a");
 
