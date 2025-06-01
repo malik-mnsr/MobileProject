@@ -15,8 +15,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.hai811i.mobileproject.R;
+import com.hai811i.mobileproject.dto.AppointmentDTO;
 import com.hai811i.mobileproject.dto.PatientDTO;
 import com.hai811i.mobileproject.dto.ReserveRequest;
+import com.hai811i.mobileproject.entity.Appointment;
+import com.hai811i.mobileproject.entity.Motif;
 import com.hai811i.mobileproject.viewmodel.ProjectViewModel;
 public class AppointmentConfirmationFragment extends Fragment {
 
@@ -110,7 +113,48 @@ public class AppointmentConfirmationFragment extends Fragment {
 
         // Call ViewModel to reserve appointment
         projectViewModel.reserveAppointment(slotId, request);
+        // Observe the appointment creation to trigger notification
+        projectViewModel.getAppointment().observe(getViewLifecycleOwner(), appointmentDTO -> {
+            if (appointmentDTO != null) {
+                // Create a notification when appointment is successfully created
+                sendDoctorNotification(appointmentDTO);
+            }
+        });
     }
+
+    private void sendDoctorNotification(AppointmentDTO appointmentDTO) {
+        // Convert AppointmentDTO to Appointment entity if needed
+        // (You might need to create a mapper or extension function)
+        Appointment appointment = convertToAppointmentEntity(appointmentDTO);
+
+        projectViewModel.notifyDoctor(appointment);
+
+        // Observe notification result
+        projectViewModel.getNotificationSuccess().observe(getViewLifecycleOwner(), message -> {
+            if (message != null) {
+                Toast.makeText(getContext(), "Notification sent to doctor", Toast.LENGTH_SHORT).show();
+                projectViewModel.resetNotificationStatus();
+            }
+        });
+
+        projectViewModel.getNotificationError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Toast.makeText(getContext(), "Notification failed: " + error, Toast.LENGTH_SHORT).show();
+                projectViewModel.resetNotificationStatus();
+            }
+        });
+    }
+
+    // Helper method to convert DTO to Entity
+    private Appointment convertToAppointmentEntity(AppointmentDTO dto) {
+        // Implement conversion logic based on your entity structure
+        Appointment appointment = new Appointment();
+        appointment.setId(dto.getId());
+        appointment.setMotif(String.valueOf(Motif.valueOf(dto.getMotif())));
+        // Set other necessary fields...
+        return appointment;
+    }
+
 
     private void setupViewModelObservers() {
         projectViewModel.getDoctor().observe(getViewLifecycleOwner(), doctor -> {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +17,27 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hai811i.mobileproject.ChoixActivity;
 import com.hai811i.mobileproject.DoctorActivity;
 import com.hai811i.mobileproject.R;
 import com.hai811i.mobileproject.api.RetrofitClient;
 import com.hai811i.mobileproject.implementation.AppointmentRepositoryImpl;
 import com.hai811i.mobileproject.implementation.DoctorRepositoryImpl;
+import com.hai811i.mobileproject.implementation.DrugRepositoryImpl;
 import com.hai811i.mobileproject.implementation.GoogleCalendarRepositoryImpl;
 import com.hai811i.mobileproject.implementation.MedicalRecordRepositoryImpl;
+import com.hai811i.mobileproject.implementation.NotificationRepositoryImpl;
 import com.hai811i.mobileproject.implementation.PatientRepositoryImpl;
+import com.hai811i.mobileproject.implementation.PrescriptionsRepositoryImpl;
 import com.hai811i.mobileproject.implementation.SlotRepositoryImpl;
 import com.hai811i.mobileproject.repository.AppointmentRepository;
+import com.hai811i.mobileproject.repository.DrugRepository;
 import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
 import com.hai811i.mobileproject.repository.MedicalRecordRepository;
+import com.hai811i.mobileproject.repository.NotificationRepository;
 import com.hai811i.mobileproject.repository.PatientRepository;
+import com.hai811i.mobileproject.repository.PrescriptionsRepository;
 import com.hai811i.mobileproject.repository.SlotRepository;
 import com.hai811i.mobileproject.utils.ProjectViewModelFactory;
 
@@ -57,9 +65,10 @@ public class SignInFragment extends Fragment {
         DoctorRepository doctorRepository = new DoctorRepositoryImpl(RetrofitClient.getApiService());
         SlotRepository slotRepository = new SlotRepositoryImpl(RetrofitClient.getApiService());
         MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepositoryImpl(RetrofitClient.getApiService());
-
-
-        signInViewModel = new ViewModelProvider(this, new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository,medicalRecordRepository)).get(ProjectViewModel.class);
+        PrescriptionsRepository prescriptionsRepository = new PrescriptionsRepositoryImpl(RetrofitClient.getApiService());
+        NotificationRepository notificationRepository = new NotificationRepositoryImpl(RetrofitClient.getApiService());
+        DrugRepository drugRepository = new DrugRepositoryImpl(RetrofitClient.getApiService());
+        signInViewModel = new ViewModelProvider(this, new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository,medicalRecordRepository, prescriptionsRepository, notificationRepository,drugRepository)).get(ProjectViewModel.class);
 
         // Handle back button click
         ImageButton backButton = view.findViewById(R.id.backButton);
@@ -111,6 +120,7 @@ public class SignInFragment extends Fragment {
         loginButton.setText("Logging in...");
 
         // Observe ViewModel LiveData
+        // Observe success
         signInViewModel.getLoginResponse().observe(getViewLifecycleOwner(), response -> {
             if (response != null) {
                 loginButton.setEnabled(true);
@@ -118,13 +128,28 @@ public class SignInFragment extends Fragment {
 
                 if (response.isSuccess()) {
                     saveUserData(response);
-                    navigateToMainScreen();
+                    int id = Math.toIntExact(response.getDoctor().getId());
+
+                    FirebaseMessaging.getInstance().getToken()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    String token = task.getResult();
+                                    Log.d("FCM", "New token: " + token);
+                                    signInViewModel.updateDoctorFcmToken(id, token);
+                                } else {
+                                    Log.w("FCM", "Fetching FCM token failed", task.getException());
+                                }
+
+                                navigateToMainScreen();
+                            });
+
                 } else {
                     Toast.makeText(requireContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+// Observe error separately
         signInViewModel.getLoginError().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
                 loginButton.setEnabled(true);
@@ -133,10 +158,11 @@ public class SignInFragment extends Fragment {
             }
         });
 
+
         // Trigger the login
         signInViewModel.loginDoctor(email, phone);
-    }
 
+    }
     private void saveUserData(LoginResponse response) {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

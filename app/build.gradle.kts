@@ -53,11 +53,17 @@ dependencies {
         implementation(libs.androidx.browser)
         implementation(libs.play.services.auth)
         implementation("com.google.firebase:firebase-analytics")
+        implementation("com.google.firebase:firebase-messaging")
+
         implementation(libs.room.runtime)
         annotationProcessor(libs.room.compiler)
         implementation(libs.converter.scalars)
+        implementation(libs.osmdroid)
+        implementation(libs.osmbonuspack)
+        implementation(libs.osmbonuspack)
         implementation("com.squareup.okhttp3:okhttp:4.11.0")
         implementation("androidx.recyclerview:recyclerview:1.3.2")
+        implementation(libs.swiperefreshlayout)
     }
 
 

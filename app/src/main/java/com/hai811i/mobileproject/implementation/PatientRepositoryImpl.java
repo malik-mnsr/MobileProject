@@ -206,8 +206,8 @@ public class PatientRepositoryImpl implements PatientRepository {
                 callback.onFailure("Network error: " + t.getMessage());
             }
         });
-
     }
+
 }
 
 

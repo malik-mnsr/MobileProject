@@ -1,45 +1,36 @@
 {
   "project_info": {
-    "project_number": "573513390785",
-    "project_id": "mediassist-backend",
-    "storage_bucket": "mediassist-backend.firebasestorage.app"
+    "project_number": "667101364912",
+    "project_id": "backend-mediassist",
+    "storage_bucket": "backend-mediassist.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:573513390785:android:c7e4905da1ebec8c5f5240",
+        "mobilesdk_app_id": "1:667101364912:android:6cb89eb18b7ba662d17175",
         "android_client_info": {
           "package_name": "com.hai811i.mobileproject"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "667101364912-pv875g9jve01rb59rnvtkdcmefco8ia9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDsfI3jAi0jiRYR30_XZtt5x4GX0OyAAh4"
+          "current_key": "AIzaSyBrOdHXxnhZX3yjk05fqFcScnSbBHBJ28Y"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:573513390785:android:a2202e863ae146a15f5240",
-        "android_client_info": {
-          "package_name": "com.mediassist"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDsfI3jAi0jiRYR30_XZtt5x4GX0OyAAh4"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667101364912-pv875g9jve01rb59rnvtkdcmefco8ia9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

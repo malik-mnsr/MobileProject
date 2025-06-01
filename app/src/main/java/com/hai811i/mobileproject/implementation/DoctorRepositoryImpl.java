@@ -1,7 +1,6 @@
 // DoctorRepositoryImpl.java
 package com.hai811i.mobileproject.implementation;
 
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.hai811i.mobileproject.api.ApiService;
 import com.hai811i.mobileproject.callback.ModeCallback;
 import com.hai811i.mobileproject.callback.SimpleCallback;
@@ -35,38 +34,28 @@ public class DoctorRepositoryImpl implements DoctorRepository {
         this.apiService = apiService;
     }
 
+    @Override
     public void loginDoctor(String email, String phone, LoginCallback callback) {
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        callback.onFailure("Failed to get FCM token: " + task.getException());
-                        return;
-                    }
+        apiService.loginDoctor(email, phone).enqueue(new Callback<Doctor>() {
+            @Override
+            public void onResponse(Call<Doctor> call, Response<Doctor> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(new LoginResponse(
+                            response.body(),
+                            "Login successful",
+                            true
+                    ));
+                } else {
+                    callback.onFailure("Login failed: " + response.message());
+                }
+            }
 
-                    String fcmToken = task.getResult();
-
-                    apiService.loginDoctor(email, phone, fcmToken).enqueue(new Callback<Doctor>() {
-                        @Override
-                        public void onResponse(Call<Doctor> call, Response<Doctor> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                callback.onSuccess(new LoginResponse(
-                                        response.body(),
-                                        "Login successful",
-                                        true
-                                ));
-                            } else {
-                                callback.onFailure("Login failed: " + response.message());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Doctor> call, Throwable t) {
-                            callback.onFailure("Network error: " + t.getMessage());
-                        }
-                    });
-                });
+            @Override
+            public void onFailure(Call<Doctor> call, Throwable t) {
+                callback.onFailure("Network error: " + t.getMessage());
+            }
+        });
     }
-
 
     @Override
     public void createDoctor(Doctor doctor, DoctorCallback callback) {

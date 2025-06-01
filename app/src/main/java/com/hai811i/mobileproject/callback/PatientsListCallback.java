@@ -1,6 +1,7 @@
 package com.hai811i.mobileproject.callback;
 
 import com.hai811i.mobileproject.dto.PatientDTO;
+import com.hai811i.mobileproject.entity.Patient;
 
 import java.util.List;
 

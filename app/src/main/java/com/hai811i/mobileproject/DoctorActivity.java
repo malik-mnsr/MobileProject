@@ -30,20 +30,28 @@ import com.hai811i.mobileproject.api.RetrofitClient;
 import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.entity.WorkingMode;
 import com.hai811i.mobileproject.fragments.AssistantFragment;
+import com.hai811i.mobileproject.fragments.DndFragment;
 import com.hai811i.mobileproject.fragments.DoctorCalendarFragment;
 import com.hai811i.mobileproject.fragments.DoctorProfileFragment;
+import com.hai811i.mobileproject.fragments.HomeVisitFragment;
 import com.hai811i.mobileproject.fragments.PatientListFragment;
 import com.hai811i.mobileproject.implementation.AppointmentRepositoryImpl;
 import com.hai811i.mobileproject.implementation.DoctorRepositoryImpl;
+import com.hai811i.mobileproject.implementation.DrugRepositoryImpl;
 import com.hai811i.mobileproject.implementation.GoogleCalendarRepositoryImpl;
 import com.hai811i.mobileproject.implementation.MedicalRecordRepositoryImpl;
+import com.hai811i.mobileproject.implementation.NotificationRepositoryImpl;
 import com.hai811i.mobileproject.implementation.PatientRepositoryImpl;
+import com.hai811i.mobileproject.implementation.PrescriptionsRepositoryImpl;
 import com.hai811i.mobileproject.implementation.SlotRepositoryImpl;
 import com.hai811i.mobileproject.repository.AppointmentRepository;
 import com.hai811i.mobileproject.repository.DoctorRepository;
+import com.hai811i.mobileproject.repository.DrugRepository;
 import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
 import com.hai811i.mobileproject.repository.MedicalRecordRepository;
+import com.hai811i.mobileproject.repository.NotificationRepository;
 import com.hai811i.mobileproject.repository.PatientRepository;
+import com.hai811i.mobileproject.repository.PrescriptionsRepository;
 import com.hai811i.mobileproject.repository.SlotRepository;
 import com.hai811i.mobileproject.utils.ProjectViewModelFactory;
 import com.hai811i.mobileproject.viewmodel.ProjectViewModel;
@@ -79,8 +87,11 @@ public class DoctorActivity extends AppCompatActivity {
         DoctorRepository doctorRepository = new DoctorRepositoryImpl(RetrofitClient.getApiService());
         SlotRepository slotRepository = new SlotRepositoryImpl(RetrofitClient.getApiService());
         MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepositoryImpl(RetrofitClient.getApiService());
+        PrescriptionsRepository prescriptionsRepository = new PrescriptionsRepositoryImpl(RetrofitClient.getApiService());
+        NotificationRepository notificationRepository = new NotificationRepositoryImpl(RetrofitClient.getApiService());
+        DrugRepository drugRepository = new DrugRepositoryImpl(RetrofitClient.getApiService());
         // Initialize ViewModel with factory
-        ProjectViewModelFactory factory = new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository, medicalRecordRepository);
+        ProjectViewModelFactory factory = new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository, medicalRecordRepository,prescriptionsRepository,notificationRepository,drugRepository);
         viewModel = new ViewModelProvider(this, factory).get(ProjectViewModel.class);
 
 
@@ -137,14 +148,44 @@ public class DoctorActivity extends AppCompatActivity {
         consultationOption.setOnClickListener(v ->
                 viewModel.updateDoctorMode(doctorId, WorkingMode.CONSULTATION));
 
-        homeVisitOption.setOnClickListener(v ->
-                viewModel.updateDoctorMode(doctorId, WorkingMode.HOME_VISIT));
+        homeVisitOption.setOnClickListener(v -> {
+            // 1. Update the doctor's mode
+            viewModel.updateDoctorMode(doctorId, WorkingMode.HOME_VISIT);
+
+            // 2. Hide the action grid if it's visible
+            View actionGrid = findViewById(R.id.action_grid_container);
+            if (actionGrid != null) {
+                actionGrid.setVisibility(View.GONE);
+            }
+
+            // 3. Launch the HomeVisitFragment
+            HomeVisitFragment homeVisitFragment = new HomeVisitFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, homeVisitFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+
 
         emergencyOption.setOnClickListener(v ->
                 viewModel.updateDoctorMode(doctorId, WorkingMode.EMERGENCY));
 
-        dndOption.setOnClickListener(v ->
-                viewModel.updateDoctorMode(doctorId, WorkingMode.DND));
+        dndOption.setOnClickListener(v -> {
+            // Update the view model (if needed)
+            viewModel.updateDoctorMode(doctorId, WorkingMode.DND);
+            // Hide action grid
+            View actionGrid = findViewById(R.id.action_grid_container);
+            if (actionGrid != null) {
+                actionGrid.setVisibility(View.GONE);
+            }
+            // Launch the DndFragment
+            DndFragment dndFragment = new DndFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, dndFragment) // Replace with your container ID
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         loadProfilePicture(profilePic);
 
@@ -181,6 +222,10 @@ public class DoctorActivity extends AppCompatActivity {
                     showMainContent();
                     return true;
                 } else if (itemId == R.id.nav_rdv) {
+                    View actionGrid = findViewById(R.id.action_grid_container);
+                    if (actionGrid != null) {
+                        actionGrid.setVisibility(View.GONE);
+                    }
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, new DoctorCalendarFragment())
                             .commit();

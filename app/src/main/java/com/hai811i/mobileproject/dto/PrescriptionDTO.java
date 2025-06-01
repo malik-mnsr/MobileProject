@@ -30,7 +30,6 @@ public class PrescriptionDTO {
         this.dateIssued = dateIssued;
     }
 
-    // Getters and Setters
     public Integer getPrescriptionId() {
         return prescriptionId;
     }

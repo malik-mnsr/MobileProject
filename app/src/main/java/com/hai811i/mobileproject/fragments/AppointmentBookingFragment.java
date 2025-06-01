@@ -24,17 +24,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hai811i.mobileproject.R;
 import com.hai811i.mobileproject.api.RetrofitClient;
 import com.hai811i.mobileproject.entity.Doctor;
+import com.hai811i.mobileproject.entity.DrugReference;
 import com.hai811i.mobileproject.implementation.AppointmentRepositoryImpl;
 import com.hai811i.mobileproject.implementation.DoctorRepositoryImpl;
+import com.hai811i.mobileproject.implementation.DrugRepositoryImpl;
 import com.hai811i.mobileproject.implementation.GoogleCalendarRepositoryImpl;
 import com.hai811i.mobileproject.implementation.MedicalRecordRepositoryImpl;
+import com.hai811i.mobileproject.implementation.NotificationRepositoryImpl;
 import com.hai811i.mobileproject.implementation.PatientRepositoryImpl;
+import com.hai811i.mobileproject.implementation.PrescriptionsRepositoryImpl;
 import com.hai811i.mobileproject.implementation.SlotRepositoryImpl;
 import com.hai811i.mobileproject.repository.AppointmentRepository;
 import com.hai811i.mobileproject.repository.DoctorRepository;
+import com.hai811i.mobileproject.repository.DrugRepository;
 import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
 import com.hai811i.mobileproject.repository.MedicalRecordRepository;
+import com.hai811i.mobileproject.repository.NotificationRepository;
 import com.hai811i.mobileproject.repository.PatientRepository;
+import com.hai811i.mobileproject.repository.PrescriptionsRepository;
 import com.hai811i.mobileproject.repository.SlotRepository;
 import com.hai811i.mobileproject.utils.ProjectViewModelFactory;
 import com.hai811i.mobileproject.viewmodel.ProjectViewModel;
@@ -59,14 +66,18 @@ public class AppointmentBookingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initialize ViewModel
         GoogleCalendarRepository googleCalendarRepository = new GoogleCalendarRepositoryImpl(RetrofitClient.getApiService());
         AppointmentRepository appointmentRepository = new AppointmentRepositoryImpl(RetrofitClient.getApiService());
         PatientRepository patientRepository = new PatientRepositoryImpl(RetrofitClient.getApiService());
         DoctorRepository doctorRepository = new DoctorRepositoryImpl(RetrofitClient.getApiService());
         SlotRepository slotRepository = new SlotRepositoryImpl(RetrofitClient.getApiService());
         MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepositoryImpl(RetrofitClient.getApiService());
+        PrescriptionsRepository prescriptionsRepository = new PrescriptionsRepositoryImpl(RetrofitClient.getApiService());
+        NotificationRepository notificationRepository = new NotificationRepositoryImpl(RetrofitClient.getApiService());
+        DrugRepository drugRepository = new DrugRepositoryImpl(RetrofitClient.getApiService());
         // Initialize ViewModel with factory
-        ProjectViewModelFactory factory = new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository, medicalRecordRepository);
+        ProjectViewModelFactory factory = new ProjectViewModelFactory(doctorRepository,patientRepository, slotRepository,appointmentRepository,googleCalendarRepository, medicalRecordRepository,prescriptionsRepository, notificationRepository, drugRepository);
         viewModel = new ViewModelProvider(requireActivity(), factory).get(ProjectViewModel.class);
     }
 
