@@ -19,11 +19,12 @@ This is a **mobile application** built using **Java** and **XML** for Android. I
 
 ```plaintext
 📦 com.example.mobileproject
-├── 📁 controller           # Fragments & Activities
+├── 📁 api                 # Retrofit interface (ApiService)
 ├── 📁 dto                 # DTOs used for API communication
 ├── 📁 entity              # Model classes (Doctor, Patient, etc.)
 ├── 📁 repository          # Repositories to manage data operations
-├── 📁 service             # Retrofit interface (ApiService)
-├── 📁 viewmodel           # ViewModels for each main entity
-├── 📁 utils               # Helpers for image conversion, validation, etc.
+├── 📁 implementation      # Implements the repositories interfaces
+├── 📁 fragments           # Contais Application Fragments
+├── 📁 viewmodel           # ViewModel
+├── 📁 utils               # Adapter Design Patterns
 └── 📄 AndroidManifest.xml
