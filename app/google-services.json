@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "667101364912",
+    "project_id": "backend-mediassist",
+    "storage_bucket": "backend-mediassist.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667101364912:android:6cb89eb18b7ba662d17175",
+        "android_client_info": {
+          "package_name": "com.hai811i.mobileproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667101364912-pv875g9jve01rb59rnvtkdcmefco8ia9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrOdHXxnhZX3yjk05fqFcScnSbBHBJ28Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667101364912-pv875g9jve01rb59rnvtkdcmefco8ia9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

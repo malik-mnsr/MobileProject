@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.hai811i.mobileproject" />
+                  <option name="mobileSdkAppId" value="1:667101364912:android:6cb89eb18b7ba662d17175" />
+                  <option name="projectId" value="backend-mediassist" />
+                  <option name="projectNumber" value="667101364912" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -3,22 +3,22 @@
 
     <item
         android:id="@+id/nav_accueil"
-
-        android:title="Accueil" />
+        android:title="Accueil"
+        android:icon="@drawable/ic_home" />
 
     <item
         android:id="@+id/nav_fiche"
-
-        android:title="Fiche" />
+        android:title="Patients"
+        android:icon="@drawable/ic_fiche" />
 
     <item
         android:id="@+id/nav_ai"
-
-        android:title="AI Assistant" />
+        android:title="AI Assistant"
+        android:icon="@drawable/ic_ai" />
 
     <item
         android:id="@+id/nav_rdv"
-
-        android:title="Rendez-vous" />
+        android:title="Rendez-vous"
+        android:icon="@drawable/ic_calendar1" />
 
 </menu>

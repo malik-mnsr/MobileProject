@@ -2,6 +2,9 @@
 package com.hai811i.mobileproject.implementation;
 
 import com.hai811i.mobileproject.api.ApiService;
+import com.hai811i.mobileproject.callback.ModeCallback;
+import com.hai811i.mobileproject.callback.SimpleCallback;
+import com.hai811i.mobileproject.entity.WorkingMode;
 import com.hai811i.mobileproject.request.DoctorRequestWithBase64;
 import com.hai811i.mobileproject.entity.Doctor;
 import com.hai811i.mobileproject.callback.DoctorCallback;
@@ -13,7 +16,9 @@ import com.hai811i.mobileproject.callback.VoidCallback;
 import com.hai811i.mobileproject.response.LoginResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -247,6 +252,66 @@ public class DoctorRepositoryImpl implements DoctorRepository {
             @Override
             public void onFailure(Call<Doctor> call, Throwable t) {
                 callback.onFailure("Network error: " + t.getMessage());
+            }
+        });
+    }
+
+    public void updateDoctorFcmToken(int doctorId, String token, VoidCallback callback) {
+        Map<String, String> tokenRequest = new HashMap<>();
+        tokenRequest.put("token", token);
+
+        Call<Void> call = apiService.updateDoctorFcmToken(doctorId, tokenRequest);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess();
+                } else {
+                    callback.onFailure("Failed to update FCM token: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onFailure("Network error: " + t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void getDoctorMode(long doctorId, ModeCallback callback) {
+        apiService.getDoctorMode(doctorId).enqueue(new Callback<WorkingMode>() {
+            @Override
+            public void onResponse(Call<WorkingMode> call, Response<WorkingMode> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onFailure(new Exception("Failed to get mode: " + response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WorkingMode> call, Throwable t) {
+                callback.onFailure(t);
+            }
+        });
+    }
+
+    @Override
+    public void updateDoctorMode(long doctorId, WorkingMode newMode, SimpleCallback callback) {
+        apiService.updateDoctorMode(doctorId, newMode).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess();
+                } else {
+                    callback.onFailure(new Exception("Failed to update mode: " + response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onFailure(t);
             }
         });
     }

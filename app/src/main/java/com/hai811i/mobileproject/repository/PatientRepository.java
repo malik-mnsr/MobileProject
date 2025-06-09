@@ -3,10 +3,13 @@ package com.hai811i.mobileproject.repository;
 import com.hai811i.mobileproject.callback.PatientCallback;
 import com.hai811i.mobileproject.callback.PatientsListCallback;
 import com.hai811i.mobileproject.callback.ProfilePictureCallback;
+import com.hai811i.mobileproject.callback.RawPatientCallback;
 import com.hai811i.mobileproject.callback.VoidCallback;
+import com.hai811i.mobileproject.dto.PatientRequestWithBase64;
 import com.hai811i.mobileproject.entity.Patient;
 
 import okhttp3.MultipartBody;
+import retrofit2.Call;
 
 public interface PatientRepository {
     void createPatient(Long doctorId, Patient patient, PatientCallback callback);
@@ -17,4 +20,5 @@ public interface PatientRepository {
     void deletePatient(Long id, VoidCallback callback);
     void uploadProfilePicture(Long id, MultipartBody.Part file, VoidCallback callback);
     void getProfilePicture(Long id, ProfilePictureCallback callback);
+    void createPatientWithPictureBase64(PatientRequestWithBase64 request, RawPatientCallback callback);
 }

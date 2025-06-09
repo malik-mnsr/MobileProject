@@ -4,7 +4,9 @@ package com.hai811i.mobileproject.implementation;
 import com.hai811i.mobileproject.api.ApiService;
 import com.hai811i.mobileproject.callback.PatientCallback;
 import com.hai811i.mobileproject.callback.PatientsListCallback;
+import com.hai811i.mobileproject.callback.RawPatientCallback;
 import com.hai811i.mobileproject.dto.PatientDTO;
+import com.hai811i.mobileproject.dto.PatientRequestWithBase64;
 import com.hai811i.mobileproject.entity.Patient;
 
 import com.hai811i.mobileproject.repository.PatientRepository;
@@ -184,4 +186,29 @@ public class PatientRepositoryImpl implements PatientRepository {
             }
         });
     }
+
+
+    @Override
+    public void createPatientWithPictureBase64(PatientRequestWithBase64
+                                                                request, RawPatientCallback callback) {
+        apiService.createPatientWithPictureBase64(request).enqueue(new Callback<Patient>() {
+            @Override
+            public void onResponse(Call<Patient> call, Response<Patient> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onFailure("Failed to create patient: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Patient> call, Throwable t) {
+                callback.onFailure("Network error: " + t.getMessage());
+            }
+        });
+    }
+
 }
+
+
+

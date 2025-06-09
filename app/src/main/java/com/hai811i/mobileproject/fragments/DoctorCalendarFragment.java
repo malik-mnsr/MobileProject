@@ -2,8 +2,11 @@ package com.hai811i.mobileproject.fragments;
 
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,6 +20,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -27,13 +31,21 @@ import com.hai811i.mobileproject.dto.SlotCreateDTO;
 import com.hai811i.mobileproject.dto.SlotDTO;
 import com.hai811i.mobileproject.implementation.AppointmentRepositoryImpl;
 import com.hai811i.mobileproject.implementation.DoctorRepositoryImpl;
+import com.hai811i.mobileproject.implementation.DrugRepositoryImpl;
 import com.hai811i.mobileproject.implementation.GoogleCalendarRepositoryImpl;
+import com.hai811i.mobileproject.implementation.MedicalRecordRepositoryImpl;
+import com.hai811i.mobileproject.implementation.NotificationRepositoryImpl;
 import com.hai811i.mobileproject.implementation.PatientRepositoryImpl;
+import com.hai811i.mobileproject.implementation.PrescriptionsRepositoryImpl;
 import com.hai811i.mobileproject.implementation.SlotRepositoryImpl;
 import com.hai811i.mobileproject.repository.AppointmentRepository;
 import com.hai811i.mobileproject.repository.DoctorRepository;
+import com.hai811i.mobileproject.repository.DrugRepository;
 import com.hai811i.mobileproject.repository.GoogleCalendarRepository;
+import com.hai811i.mobileproject.repository.MedicalRecordRepository;
+import com.hai811i.mobileproject.repository.NotificationRepository;
 import com.hai811i.mobileproject.repository.PatientRepository;
+import com.hai811i.mobileproject.repository.PrescriptionsRepository;
 import com.hai811i.mobileproject.repository.SlotRepository;
 import com.hai811i.mobileproject.utils.ProjectViewModelFactory;
 import com.hai811i.mobileproject.viewmodel.ProjectViewModel;
@@ -57,7 +69,7 @@ public class DoctorCalendarFragment extends Fragment {
     private Long currentDoctorId;
     private int selectedDay = -1;
     private List<SlotCreateDTO> slotsToCreate = new ArrayList<>();
-
+    private Button btnConnectGoogleCalendar;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,16 +84,24 @@ public class DoctorCalendarFragment extends Fragment {
         PatientRepository patientRepository = new PatientRepositoryImpl(RetrofitClient.getApiService());
         DoctorRepository doctorRepository = new DoctorRepositoryImpl(RetrofitClient.getApiService());
         SlotRepository slotRepository = new SlotRepositoryImpl(RetrofitClient.getApiService());
-
+        MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepositoryImpl(RetrofitClient.getApiService());
+        PrescriptionsRepository prescriptionsRepository = new PrescriptionsRepositoryImpl(RetrofitClient.getApiService());
+        NotificationRepository notificationRepository = new NotificationRepositoryImpl(RetrofitClient.getApiService());
+        DrugRepository drugRepository = new DrugRepositoryImpl(RetrofitClient.getApiService());
         viewModel = new ViewModelProvider(this,
                 new ProjectViewModelFactory(
                         doctorRepository,
                         patientRepository,
                         slotRepository,
                         appointmentRepository,
-                        googleCalendarRepository
+                        googleCalendarRepository,
+                        medicalRecordRepository,
+                        prescriptionsRepository,
+                        notificationRepository,
+                        drugRepository
                 )
         ).get(ProjectViewModel.class);
+
     }
 
     @Override
@@ -120,10 +140,19 @@ public class DoctorCalendarFragment extends Fragment {
         // Save slots button
         btnSaveSlots.setOnClickListener(v -> saveTimeSlots());
 
-        // Observe ViewModel
+        btnConnectGoogleCalendar = view.findViewById(R.id.btn_connect_google_calendar);
+        btnConnectGoogleCalendar.setOnClickListener(v -> connectGoogleCalendar());
+
         observeViewModel();
 
         return view;
+    }
+    private void connectGoogleCalendar() {
+        if (currentDoctorId == -1) {
+            Toast.makeText(getContext(), "Doctor not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        viewModel.fetchGoogleAuthUrl(currentDoctorId);
     }
 
     private void updateMonthYear() {
@@ -412,6 +441,44 @@ public class DoctorCalendarFragment extends Fragment {
             btnAddTimeSlot.setEnabled(!isLoading);
             btnSaveSlots.setEnabled(!isLoading);
         });
+        viewModel.getGoogleAuthUrl().observe(getViewLifecycleOwner(), url -> {
+            if (url != null) {
+                openAuthUrl(url);
+            }
+        });
+        viewModel.getGoogleOAuthResult().observe(getViewLifecycleOwner(), result -> {
+            if (result != null) {
+                Toast.makeText(getContext(), "Google Calendar connected successfully", Toast.LENGTH_SHORT).show();
+                btnConnectGoogleCalendar.setVisibility(View.GONE);
+            }
+        });
+        viewModel.getGoogleCalendarConnectionStatus().observe(getViewLifecycleOwner(), isConnected -> {
+            if (isConnected != null) {
+                btnConnectGoogleCalendar.setVisibility(isConnected ? View.GONE : View.VISIBLE);
+            }
+        });
+        viewModel.getGoogleCalendarError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Log.e("GoogleCalendar", "Google Calendar error: " + error);
+                Toast.makeText(getContext(), "Google Calendar error: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+    public void handleOAuthCallback(String code, String state) {
+        viewModel.handleOAuthCallback(code, state);
+    }
+    // Add this method to handle the auth URL
+    private void openAuthUrl(String url) {
+        try {
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.intent.setPackage("com.android.chrome"); // Force Chrome
+            customTabsIntent.launchUrl(requireContext(), Uri.parse(url));
+        } catch (ActivityNotFoundException e) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        }
     }
 
 }

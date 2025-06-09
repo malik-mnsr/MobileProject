@@ -11,6 +11,7 @@ public class DoctorRequestWithBase64 {
     private String phone;
     private String currentMode;
     private String profilePictureBase64; // Base64 string
+    private String fcmToken;
     private List<PatientRequest> patients;
 
     public String getFirstName() {
@@ -75,6 +76,14 @@ public class DoctorRequestWithBase64 {
 
     public void setProfilePictureBase64(String profilePictureBase64) {
         this.profilePictureBase64 = profilePictureBase64;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     public List<PatientRequest> getPatients() {

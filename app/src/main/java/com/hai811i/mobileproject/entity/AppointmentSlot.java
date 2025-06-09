@@ -8,7 +8,7 @@ public class AppointmentSlot {
     private Doctor doctor;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private SlotStatus status;
+    private AppointmentStatus status;
 
     public AppointmentSlot() {
     }
@@ -45,11 +45,11 @@ public class AppointmentSlot {
         this.endTime = endTime;
     }
 
-    public SlotStatus getStatus() {
+    public AppointmentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(SlotStatus status) {
+    public void setStatus(AppointmentStatus status) {
         this.status = status;
     }
 
@@ -59,15 +59,15 @@ public class AppointmentSlot {
     }
 
     public boolean isAvailable() {
-        return status == SlotStatus.AVAILABLE;
+        return status == AppointmentStatus.AVAILABLE;
     }
 
     public boolean isBooked() {
-        return status == SlotStatus.BOOKED;
+        return status == AppointmentStatus.BOOKED;
     }
 
     public boolean isUnavailable() {
-        return status == SlotStatus.UNAVAILABLE;
+        return status == AppointmentStatus.UNAVAILABLE;
     }
 }
 

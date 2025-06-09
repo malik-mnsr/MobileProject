@@ -5,50 +5,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Doctor implements Serializable {
-    private int id;
+
+    private Long id;
     private String firstName;
     private String lastName;
     private int age;
     private String email;
     private String specialty;
     private String phone;
-    private String profilePicture; // base64 encoded
+    private String profilePicture;
     private String profilePictureContentType;
-    private String currentMode;
+    private WorkingMode currentMode = WorkingMode.NORMAL;
+    private String gAccessToken;
+    private String gRefreshToken;
+    private Long gTokenExpiryMs;
+    private String fcmToken;
+    private List<Patient> patients = new ArrayList<>();
 
-
-    private List<Patient> patients;
-    public Doctor(String firstName, String lastName, int age, String email,String specialty, String phone){
-        this.firstName=firstName;
-        this.lastName=lastName;
-        this.age=age;
-        this.email=email;
-        this.specialty=specialty;
-        this.phone=phone;
-    }
-    // Constructeur
-    public Doctor(){}
-    public Doctor(int id, String firstName, String lastName, int age, String email, String specialty,
-                  String phone, String profilePicture, String profilePictureContentType, String currentMode, List<Patient> patients) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
-        this.email = email;
-        this.specialty = specialty;
-        this.phone = phone;
-        this.profilePicture = profilePicture;
-        this.profilePictureContentType = profilePictureContentType;
-        this.currentMode = currentMode;
-        this.patients= new ArrayList<>();
-    }
-
-    // Getters et Setters
-    public int getId() {
+    // Getters and Setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -116,12 +95,44 @@ public class Doctor implements Serializable {
         this.profilePictureContentType = profilePictureContentType;
     }
 
-    public String getCurrentMode() {
+    public WorkingMode getCurrentMode() {
         return currentMode;
     }
 
-    public void setCurrentMode(String currentMode) {
+    public void setCurrentMode(WorkingMode currentMode) {
         this.currentMode = currentMode;
+    }
+
+    public String getgAccessToken() {
+        return gAccessToken;
+    }
+
+    public void setgAccessToken(String gAccessToken) {
+        this.gAccessToken = gAccessToken;
+    }
+
+    public String getgRefreshToken() {
+        return gRefreshToken;
+    }
+
+    public void setgRefreshToken(String gRefreshToken) {
+        this.gRefreshToken = gRefreshToken;
+    }
+
+    public Long getgTokenExpiryMs() {
+        return gTokenExpiryMs;
+    }
+
+    public void setgTokenExpiryMs(Long gTokenExpiryMs) {
+        this.gTokenExpiryMs = gTokenExpiryMs;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     public List<Patient> getPatients() {
