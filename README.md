@@ -9,7 +9,6 @@ This is a **mobile application** built using **Java** and **XML** for Android. I
 - 🔗 **API Consumption** via Retrofit (`ApiService` interface)
 - 🧠 **MVVM Architecture** using `ViewModel`, `LiveData`, and `Repository` patterns
 - 📸 Supports **profile picture** upload via camera or gallery
-- 🌍 Multilingual support (English & French)
 - 🔔 **Push notifications** via Firebase
 - 📆 **Google Calendar** integration for doctors
 - 📄 Handles PDF and medical data visualization
